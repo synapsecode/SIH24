@@ -188,7 +188,7 @@ class _BinOccularsState extends State<BinOcculars> {
               : Stack(
                   children: [
                     GoogleMap(
-                      style: gmapStyleString,
+                      // style: gmapStyleString,
                       onMapCreated: (controller) {
                         mapController = controller;
                       },
