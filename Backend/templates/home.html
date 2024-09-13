@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrashTrace</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='web/css/style.css')}}" />
+    <link
+      rel="stylesheet"
+      media="screen and (max-width: 850px)"
+      href="{{url_for('static', filename='web/css/style.css')}}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="static/web/js/web.js"></script>
+    <link rel="icon" type="static/web/images/x-icon" href="static/web/images/favicon.ico" />
+  </head>
+  <body>
+    <div onclick="topFunction()" id="uparrow"><img src="static/web/images/upa.webp"></div>
+    <header>
+      <nav id="navbar" class="stickyele">
+        <a href="#home-section"
+          ><img src="static/web/images/icon.png" alt="TrashTrace"
+        /></a>
+        <ul id="navul">
+          <li class="navitems"><a href="#home-section"> Home </a></li>
+          <li class="navitems"><a href="#aboutus-section"> About Us </a></li>
+          <li class="navitems"><a href="#ouraim-section"> Our Aim </a></li>
+          <li class="navitems">
+            <a href="#contactus-section"> Contact Us </a>
+          </li>
+        </ul>
+        <div id="hamb">
+        <img id="imghamb" src="static/web/images/hamburger.png"  onclick="hambFunction()">
+        <ul id="hamburg">
+          <li id="hambitems"><a href="#aboutus" target="_blank">TrashTag</a></li>
+          <!-- <li id="hambitems"><a href="BinOcculars.html" target="_blank">BinOcculars</a></li> -->
+          <li id="hambitems"><a href="#aboutus" target="_blank">LitterPatrol</a></li>
+          <li id="hambitems"><a href="#aboutus" target="_blank">ReCyclX</a></li>
+          <!-- <li id="hambitems"><a href="" target="_blank">Register</a></li> -->
+        </ul>
+      </div>
+      </nav>
+    </header>
+    <section id="home-section">
+      <img src="static/web/images/bg.jpg" alt="background" />
+      <div>
+        <h1 class="h-primary center">TrashTrace</h1>
+        <div id="homepara">
+          <p class="center">
+            TrashTrace is a comprehensive waste management platform designed to
+            address various aspects of waste disposal and recycling. The
+            platform offers multiple products each aimed at promoting effective
+            waste management, easy segregation, incentivizing users and
+            stakeholders, and reducing littering in public places.<br />The
+            proposed methodology outlines the development process for a
+            prototype smart dustbin, which automatically segregates
+            biodegradable and non-biodegradable waste using AI and sensors. This
+            intelligent waste segregation system, along with the software
+            applications developed for mobile and web platforms, empowers
+            individuals and businesses to make informed waste disposal
+            decisions. The main goal of TrashTrace is to be the one stop
+            solution for all waste management needs right from the start of the
+            supply chain to the end consumer and recycling agencies
+          </p>
+        </div>
+        <!-- <a href="Reg.html" class="center" id="logreg">Register</a> -->
+      </div>
+    </section>
+    <section id="aboutus-section">
+      <img src="static/web/images/bgabus.jpg" alt="TT" />
+      <div>
+        <h1 class="h-primary center">About us</h1>
+        <p class="center">
+          TrashTrace is a complete platform for everything related to Waste
+          Management from source to end of its lifecycle and potential recycling
+        <br>Some Products under TrashTrace:</p>
+        <div id="aboutus">
+          <div class="aboutitem">
+            <h2 class="h-secondary center">
+              <img src="static/web/images/TrashTag.png" />Trash Tag
+            </h2>
+            <p class="center">
+              This will allow users to scan QR codes on products and
+              merchant dustbins to redeem incentives for proper waste disposal.
+              The backend server will handle the data related to waste disposal,
+              incentivization, and tracking of products properly disposed of
+              after use.
+            </p>
+          </div>
+          <div class="aboutitem">
+            <h2 class="h-secondary center">
+              <img src="static/web/images/BinOcculars.png" />BinOcculars
+            </h2>
+            <p class="center">
+              This will provide an easy-to-use interface for users to
+              find specific-purpose dustbins for various types of waste, such as
+              electrical waste, plastic, old papers, and metal waste. The
+              backend server will manage the database of dustbin locations and
+              waste types, enabling seamless navigation and waste disposal for
+              users.
+            </p>
+          </div>
+          <div class="aboutitem">
+            <h2 class="h-secondary center">
+              <img src="static/web/images/litterpatrol.png" />LitterPatrol</h2>
+            <p class="center">
+              Utilize AI to detect individuals who litter in public places or
+              UNESCO Heritage Sites. Users will be required to scan their face
+              or ID on entry, and the CCTV cameras equipped with AI will
+              identify and penalize those who litter. The backend server will
+              store the data related to littering instances and fine receipts.
+            </p>
+          </div>
+          <div class="aboutitem">
+            <h2 class="h-secondary center">
+              <img src="static/web/images/ReCyclX.png" />ReCyclX
+            </h2>
+            <p class="center">
+              This software portal will allow users to book appointments for
+              exchanging recyclable materials for cash compensation. The backend
+              server will manage the appointments, recycling centers, and
+              compensation tracking.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="ouraim-section">
+      <img src="static/web/images/images.jpg" />
+      <div id="aimdiv">
+        <h1 class="h-primary center">Our Aim</h1>
+        <div id="ouraim" class="center">
+          <p>The main goal of TrashTrace is to be the one stop solution for all
+          waste management needs right from the start of the supply chain to the
+          end consumer and recycling agencies</p>
+        </div>
+        <div class="aimimg"> <img src="static/web/images/img2.jpg" />
+        </div>
+      </div>
+    </section>
+    <section id="contactus-section">
+      <h1 class="h-primary center">Contact Us</h1>
+      <div id="contactus">
+        <!-- <img src="bg/contactus.jpg" alt="!"> -->
+        <form action="bknd.php" id="contactform" method="post">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Enter your name"
+          />
+          <label for="email">Email ID</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Enter your Email ID"
+          />
+          <label for="phone">Phone Number</label>
+          <input
+            type="number"
+            name="phone"
+            id="phone"
+            placeholder="Enter your phone"
+          />
+
+          <button class="btn">Submit</button>
+        </form>
+      </div>
+    </section>
+    <footer>
+      <div id="footer">
+        <div class="footitem">
+          <a href="#"> <img src="static/web/images/fb.png" alt="Facebook" /> </a>
+        </div>
+        <div class="footitem">
+          <a href="#"> <img src="static/web/images/insta.png" alt="Instagram" /> </a>
+        </div>
+        <div class="footitem">
+          <a href="#"> <img src="static/web/images/twt.png" alt="Twitter" /> </a>
+        </div>
+        <div class="footitem">
+          <a href="#"> <img src="static/web/images/yt.png" alt="YouTube" /> </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

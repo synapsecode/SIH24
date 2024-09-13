@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Manufacturer</title>
+    <link rel="icon" type="images/x-icon" href="{{url_for('static', filename='web/images/favicon.ico')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='web/css/login.css')}}">
+</head>
+
+<body>
+    <!-- <h1 style="text-align: center;">TrashTrace</h1> -->
+    {% for i in range(6) %}
+    <br>
+    {% endfor %}
+    <div id="Login">
+            <h1>Register Manufacturer</h1><br><br>
+            <input type="text" name="name" id="name" placeholder="Enter your name"> <br>
+            <input type="text" name="username" id="uname" placeholder="Enter your username"> <br>
+            <input type="password" name="password" id="pwd" placeholder="Enter your password"> <br>
+            <button type='submit' class="btn" onclick="submit()">Register</button>
+
+        <a href="/ecoperks/manufacturer/login" class="link">Existing User? Click here to Login!</a>
+    </div>
+    {% for i in range(6) %}
+    <br>
+    {% endfor %}
+
+
+    <script>
+        const submit = async () => {
+            const name = document.getElementById('name').value;
+            const username = document.getElementById('uname').value;
+            const password = document.getElementById('pwd').value;
+            const response = await fetch("/ecoperks/manufacturer/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body:JSON.stringify({
+                    'name': name,
+                    'username': username,
+                    'password': password,
+                })
+            });
+            if(response.status === 200){
+               console.log('Registered. Redirecting to login');
+               window.location.href = '/ecoperks/manufacturer/login';
+            }else{
+                console.error('Unexpected Error Occured. SC: '+response.status);
+                alert('Unexpected Error Occured!');
+            }
+           
+        }
+    </script>
+</body>
+
+
+</html>

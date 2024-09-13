@@ -83,11 +83,11 @@ def vendor_scan_qr():
 @ecoperks.route('/manufacturer/<id>')
 def manufacturer_home(id):
 	m = TrashTagManufacturer.query.filter_by(id=id).first()
-	if(m == None):
-		return 'Manufacturer Not Found'
+	if m is None:
+		return 'Manufacturer Not Found', 404
 	products = m.products
-	print(products)
-	return render_template('manufacturer_home.html', products=products)
+	product_list = [{'id': p.id, 'name': p.name} for p in products]
+	return jsonify(product_list), 200
 
 @ecoperks.route("/manufacturer/register", methods=['GET', 'POST'])
 def manufacturer_register():
@@ -210,7 +210,7 @@ def get_batch_qrset(bid):
 		codes.append(f'{b.id}:{e.id}')
 	print(f'Generated Codes => {codes}')
 
-	return render_template('qrset.html', codes=codes)
+	return codes, 200
 
 @ecoperks.route('/manufacturer/<mid>/analytics')
 def get_analytics(mid):

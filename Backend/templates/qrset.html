@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manufacturer QRSet</title>
+
+    <style>
+        body{
+            padding: 100px;
+        }
+          .wrapper {
+            display: inline-grid;
+            grid-template-columns: repeat(4, [col-start] 1fr);
+            grid-gap: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Here is the QRSet for your batch</h1><br><br>
+      <div class="grid wrapper">
+        {% for c in codes %}
+        <img src="{{ qrcode(c) }}" />
+        {% endfor %}     
+      </div>
+</body>
+</html>

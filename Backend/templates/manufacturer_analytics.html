@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manufacturer Home</title>
+
+    <style >
+        body{
+            background-image: url("{{url_for('static', filename='web/images/bg.jpg')}}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            padding: 50px;
+        }
+
+        .prd{
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            width: 600px;
+            margin-bottom: 10px;
+        }
+
+        .brd{
+            display: flex;
+            margin-bottom: 5px;
+            padding-left: 20px;
+            padding-right: 20px;
+            background-color: rgba(16, 16, 16, 0.2);
+            border-radius: 10px;
+            
+        }
+
+
+        .brd > * {
+            margin-left: auto;
+        }
+
+        .brd > :nth-child(1) {
+            margin-left: 10px;
+        }
+
+        .vbbtn{
+            margin: 10px 10px 10px auto;
+            vertical-align: middle;
+        }
+
+        .st{
+            font-size: 10px;
+            margin-top: -15px;
+            margin-left: -10px;
+        }
+    </style>
+</head>
+<body>
+        <h1>Manufacturer Analytics</h1>
+        <button onclick="window.history.back()">Back</button>
+     
+        <br><br><br><br>
+        {% for prd in analytics %}
+            <div class="prd">
+                <h2>{{prd['product']}}</h2>
+                <br>
+                {% for item in prd['data'] %}
+                <div class="brd">
+                    
+                    <div>
+                        <h3>{{loop.index}}</h3>
+                        <p class="st">BatchID</p>
+                    </div>
+                    <div>
+                        <h3>{{item['disposed']}}</h3>
+                        <p class="st">Disposed</p>
+                    </div>
+                    <div>
+                        <h3>{{item['batch_size'] - item['disposed']}}</h3>
+                        <p class="st">Undisposed</p>
+                    </div>
+                    
+                   
+                   
+                </div>
+                {% endfor %}
+            </div>
+            
+        {% endfor %}
+</body>
+</html>

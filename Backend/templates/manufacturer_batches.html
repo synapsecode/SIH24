@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Batches</title>
+
+    <style >
+        body{
+            background-image: url("{{url_for('static', filename='web/images/bg.jpg')}}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            padding: 50px;
+        }
+
+        .prd{
+            display: flex;
+            background-color: rgba(16, 16, 16, 0.2);
+            border-radius: 10px;
+            padding-left: 20px;
+            width: 600px;
+            margin-bottom: 10px;
+        }
+
+        .vbbtn{
+            margin: 10px 10px 10px auto;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+        <h1>Product Batches</h1>
+        <button onclick="window.history.back()">Back</button>
+        <button onclick="createBatch()">Create Batch</button>
+        <br><br><br><br>
+        {% for batch in batches %}
+            <div class="prd">
+                <h2>Batch {{loop.index}}</h2>
+                <button class="vbbtn" onclick="viewQRSet('{{batch.id}}')">View QRSet</button>
+            </div>
+            
+        {% endfor %}
+</body>
+
+<script>
+
+    const viewQRSet = (bid) => {
+      window.location.href = `/ecoperks/manufacturer/get_batch_qrset/${bid}`
+    }
+
+    const createBatch = async () => {
+        const rxz = window.location.href.split('/').splice(-4)
+        const mid = rxz[0]
+        const pid = rxz[2]
+        console.log(`mid: ${mid} & pid: ${pid}`);
+        size = window.prompt('Enter the batch Size', '10')
+        const response = await fetch("/ecoperks/manufacturer/create_batch", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body:JSON.stringify({
+                    'manufacturer_id': mid,
+                    'product_id': pid,
+                    'size': parseInt(size),
+                })
+            });
+        if(response.status === 200){
+            console.log(response.body);
+            window.location.href = `/ecoperks/manufacturer/${mid}/products/${pid}/batches`
+        }else{
+            alert('Unexpected Error Occured');
+        }
+    }
+</script>
+</html>

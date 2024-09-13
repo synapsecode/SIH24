@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manufacturer Home</title>
+
+    <style >
+        body{
+            background-image: url("{{url_for('static', filename='web/images/bg.jpg')}}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            padding: 50px;
+        }
+
+        .prd{
+            display: flex;
+            background-color: rgba(16, 16, 16, 0.2);
+            border-radius: 10px;
+            padding-left: 20px;
+            width: 600px;
+            margin-bottom: 10px;
+        }
+
+        .vbbtn{
+            margin: 10px 10px 10px auto;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+        <h1>Manufacturer Home</h1>
+        <button onclick="gotoAnalytics()">Analytics</button>
+        <button onclick="createProduct()">Create Product</button>
+        <br><br><br><br>
+        {% for product in products %}
+            <div class="prd">
+                <h2>{{product.name}}</h2>
+                <button class="vbbtn" onclick="viewBatches('{{product.id}}')">View All Batches</button>
+            </div>
+            
+        {% endfor %}
+</body>
+
+<script>
+
+    const gotoAnalytics = async () => {
+        const id = window.location.href.split('/').slice(-1).pop()
+        window.location.href = `/ecoperks/manufacturer/${id}/analytics`
+    }
+    const createProduct = async () => {
+        const id = window.location.href.split('/').slice(-1).pop()
+        const productname = window.prompt('Enter the Product Name', '');
+        console.log(productname)
+        const response = await fetch("/ecoperks/manufacturer/create_product", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body:JSON.stringify({
+                    'manufacturer_id': id,
+                    'product_name': productname,
+                })
+            });
+        if(response.status === 200){
+            console.log(response.body);
+            window.location.href = `/ecoperks/manufacturer/${id}`
+        }else{
+            alert('Unexpected Error Occured');
+        }
+    }
+    const viewBatches = (pid) => {
+        console.log('x')
+        const id = window.location.href.split('/').slice(-1).pop()
+        window.location.href = `/ecoperks/manufacturer/${id}/products/${pid}/batches`
+    }
+</script>
+</html>
