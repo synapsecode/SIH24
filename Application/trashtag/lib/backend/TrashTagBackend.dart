@@ -92,4 +92,24 @@ class TrashTagBackend {
     }
     return ResponseType(result: null, message: res.body);
   }
+
+  Future<ResponseType<bool>> add2dustbin({
+    required int userId,
+    required String qrCodeValue,
+  }) async {
+    final res = await http.post(
+      Uri.parse('$url/trashtag/userscan'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+        {'uid': userId, 'qrcode': qrCodeValue},
+      ),
+    );
+    if (res.statusCode == 200) {
+      return ResponseType(result: true, message: res.body);
+    }
+    print('ERROR => ${res.body}');
+    return ResponseType(result: false, message: res.body);
+  }
 }

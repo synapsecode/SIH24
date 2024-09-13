@@ -136,7 +136,18 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
   }
 
   add2dustbin() async {
-    //TODO: Implement this once Backend Routes are ready
+    ToastContext().init(context);
+    if (userID == null) {
+      Toast.show('No UserID Found');
+      return;
+    }
+    print("ProductKey: $productKey");
+    print("GarbageKey: $garbageKey");
+    final res = await _trBackend.add2dustbin(
+      userId: userID!,
+      qrCodeValue: productKey!,
+    );
+    Toast.show(res.message);
   }
 
   getUserPoints() async {
