@@ -1,6 +1,6 @@
 from Backend import db
 from flask import jsonify, render_template, request, Blueprint
-from Backend.models import (ProductBatch, ProductEntity,
+from Backend.models import (BinoccularDustbin, ProductBatch, ProductEntity,
 				       TrashTagManufacturer, TrashTagProduct, 
 					   TrashTagVendor, User)
 
@@ -284,3 +284,18 @@ def user_scan_qr():
 	db.session.commit()
 
 	return "Disposed", 200
+
+@ecoperks.route("/add_dustbin", methods=['POST'])
+def add_dustbin():
+	data = request.json
+	name = data['name']
+	type = data['type']
+	location = data['location']
+	lat = location['lat']
+	lng = location['lng']
+	if name is None or type is None or location is None:
+		return "Missing Parameters", 400
+	dustbin = BinoccularDustbin(name=name, type=type,lat=lat,lng=lng)
+	db.session.add(dustbin)
+	db.session.commit()
+	return "Dustbin Added", 200
