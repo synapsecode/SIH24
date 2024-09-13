@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
+import 'package:trashtag/auth/register.dart';
 import 'package:trashtag/home.dart';
 import 'package:trashtag/utils.dart';
+
+import '../backend/TrashTagBackend.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _uc = TextEditingController();
   final _pc = TextEditingController();
   bool showPassword = false;
+  final _trBackend = TrashTagBackend();
 
   @override
   void dispose() {
@@ -69,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   print(_pc.text);
                   ToastContext().init(context);
                   Toast.show('Logging In!');
-                  final res = await TrashTraceBackend().login(
+                  final res = await _trBackend.login(
                     username: _uc.value.text,
                     password: _pc.value.text,
                   );

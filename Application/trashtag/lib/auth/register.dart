@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:trashtag/auth/login.dart';
+import 'package:trashtag/backend/TrashTagBackend.dart';
 
 import '../home.dart';
 import '../utils.dart';
@@ -17,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _nc = TextEditingController();
   final _uc = TextEditingController();
   final _pc = TextEditingController();
+  final _trBackend = TrashTagBackend();
   bool showPassword = false;
   @override
   void dispose() {
@@ -76,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onPressed: () async {
                   ToastContext().init(context);
                   Toast.show('Registering!');
-                  final res = await TrashTraceBackend().register(
+                  final res = await _trBackend.register(
                     username: _uc.value.text,
                     name: _nc.value.text,
                     password: _pc.value.text,
