@@ -273,7 +273,12 @@ def user_scan_qr():
 	if(ent == None):
 		return "Invalid Entity", 400
 	if(ent.disposed):
-		return "Already Scanned", 400
+		p_uid = ent.disposed_by
+		prev_u = User.query.filter_by(id=p_uid).first()
+		prev_u.points = prev_u.points - 10
+		u.points = u.points + 10
+		db.session.commit()
+		return "Disposed", 200
 	
 	#Dispose the Entity
 	ent.disposed = True
