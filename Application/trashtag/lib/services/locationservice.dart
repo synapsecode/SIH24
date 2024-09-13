@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'dart:io';
-
+import 'dart:io' as io; // Adjusted import for web compatibility
+import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
+import 'package:geolocator/geolocator.dart' as geo;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:toast/toast.dart';
 import 'package:trashtag/utils.dart';
@@ -14,7 +15,26 @@ class LocationService {
     required Function(loc.LocationData) onFirstLocationReceived,
     required BuildContext context,
   }) async {
-    if (Platform.isIOS) {
+    if (kIsWeb) {
+      // Web-specific logic
+      final hasPermission = await _checkWebPermissions(context);
+      if (hasPermission) {
+        final position = await geo.Geolocator.getCurrentPosition();
+        loc.LocationData locData = loc.LocationData.fromMap({
+          'latitude': position.latitude,
+          'longitude': position.longitude,
+        });
+        onFirstLocationReceived(locData);
+
+        // Return a dummy stream for web
+        StreamController<loc.LocationData> locationStreamController =
+            StreamController<loc.LocationData>();
+        locationStreamController.add(locData);
+        return locationStreamController.stream;
+      }
+      return null;
+    } else if (io.Platform.isIOS || io.Platform.isAndroid) {
+      // Mobile-specific logic (Android/iOS)
       await requestPermission();
       await locationInstance.changeSettings(
         interval: 300,
@@ -24,28 +44,15 @@ class LocationService {
       final locdata = await locationInstance.getLocation();
       onFirstLocationReceived(locdata);
       return locationInstance.onLocationChanged;
-    } else {
-      //Android
-      final status = await requestPermission();
-      if (status) {
-        await locationInstance.enableBackgroundMode(enable: true);
-        final locdata = await locationInstance.getLocation();
-        onFirstLocationReceived(locdata);
-        return locationInstance.onLocationChanged;
-      } else {
-        print('PERMISSION DENIED');
-        // ignore: use_build_context_synchronously
-        Utils.showUserDialog(
-          context: context,
-          content: 'We need location function to run the application!',
-          title: 'Permission not given',
-        );
-      }
     }
     return null;
   }
 
   static Future<bool> requestPermission() async {
+    if (kIsWeb) {
+      // No need for explicit permissions on web
+      return true;
+    }
     var status = await Permission.location.request();
     bool permStatus = false;
     if (status.isGranted) {
@@ -55,6 +62,18 @@ class LocationService {
       await openAppSettings();
     }
     return permStatus;
+  }
+
+  static Future<bool> _checkWebPermissions(BuildContext context) async {
+    bool permGranted = await geo.Geolocator.isLocationServiceEnabled();
+    if (!permGranted) {
+      Utils.showUserDialog(
+        context: context,
+        content: 'We need location permission to run the application!',
+        title: 'Permission not given',
+      );
+    }
+    return permGranted;
   }
 
   static final loc.Location location = loc.Location();
@@ -72,7 +91,7 @@ class LocationService {
 
   static Future<void> startLocationListener(BuildContext context,
       [int retryCount = 0]) async {
-    //TODO: Goes into infinite loop if i try more than twice
+    // Prevents infinite loop if retry exceeds limit
     Stream<loc.LocationData>? sub;
     try {
       sub = await LocationService.initalizeLocationServices(
