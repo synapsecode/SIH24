@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   if (res.result == true) {
                     print('Register Successful!');
                     final prefs = await SharedPreferences.getInstance();
-                    await prefs.setString('loggedin_username', _uc.text);
+                    await prefs.setString('x-user', _uc.text);
                     print('LoginData Saved Successfully!');
                     Toast.show('Registered!');
                     Navigator.of(context).pushAndRemoveUntil(

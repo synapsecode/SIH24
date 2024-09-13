@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                   if (res.result == true) {
                     final prefs = await SharedPreferences.getInstance();
-                    await prefs.setString('loggedin_username', _uc.text);
+                    await prefs.setString('x-user', _uc.text);
                     print('LoginData Saved Successfully!');
                     Toast.show('Logged in!');
                     Navigator.of(context).pushAndRemoveUntil(
