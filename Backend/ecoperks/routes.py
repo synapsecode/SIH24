@@ -107,7 +107,10 @@ def manufacturer_register():
 	m = TrashTagManufacturer(name=name, username=uname, password=password)
 	db.session.add(m)
 	db.session.commit()
-	return 'Registered!'
+	return jsonify({
+		'success': True,
+		'id': m.id
+	}), 200
 
 @ecoperks.route('/manufacturer/login', methods=['POST', 'GET'])
 def manufacturer_login():
@@ -121,11 +124,11 @@ def manufacturer_login():
 		return jsonify({
 			'success': False,
 			'message': 'Manufacturer Not Found'
-		})
+		}), 404
 	return jsonify({
 		'success': True,
 		'id': m.id
-	})
+	}), 200
 
 @ecoperks.route('/manufacturer/create_product', methods=['POST'])
 def create_product():
@@ -146,7 +149,10 @@ def create_product():
 	db.session.add(p)
 	db.session.commit()
 
-	return f'Product Created with id: {p.id}', 200
+	return jsonify({
+		'success': True,
+		'id': p.id
+	}), 200
 
 
 @ecoperks.route('/manufacturer/<mid>/products/<pid>/batches')
@@ -158,7 +164,8 @@ def get_product_batches(mid, pid):
 	if(p == None):
 		return 'Product Not Found'
 	batches = p.batches
-	return render_template('manufacturer_batches.html', batches=batches)
+	batch_list = [{'id': b.id, 'size': len(b.entities)} for b in batches]
+	return jsonify(batch_list), 200
 
 
 @ecoperks.route('/manufacturer/create_batch', methods=['POST'])
@@ -198,7 +205,10 @@ def create_batch():
 	db.session.add_all(entities)
 	db.session.commit()
 
-	return f'ProductBatch of size {size} Created with id: {b.id}', 200
+	return jsonify({
+		'success': True,
+		'id': b.id
+	}), 200
 
 @ecoperks.route('/manufacturer/get_batch_qrset/<bid>')
 def get_batch_qrset(bid):
@@ -210,7 +220,10 @@ def get_batch_qrset(bid):
 		codes.append(f'{b.id}:{e.id}')
 	print(f'Generated Codes => {codes}')
 
-	return codes, 200
+	return jsonify({
+		'success': True,
+		'codes': codes
+	}), 200
 
 @ecoperks.route('/manufacturer/<mid>/analytics')
 def get_analytics(mid):
@@ -238,7 +251,7 @@ def get_analytics(mid):
 			'data': blist
 		})
 
-	return render_template('manufacturer_analytics.html', analytics=out)
+	return jsonify(out), 200
 
 # ===================================[ USER ]========================================
 
