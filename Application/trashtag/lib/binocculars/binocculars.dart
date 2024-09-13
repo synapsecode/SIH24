@@ -35,7 +35,7 @@ class _BinOccularsState extends State<BinOcculars> {
   String? gmapStyleString;
 
   loadAssetMarkers() async {
-    cuMarkerIcon = await BitmapDescriptor.fromAssetImage(
+    cuMarkerIcon = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(48, 48)),
       'assets/person.png',
     );
