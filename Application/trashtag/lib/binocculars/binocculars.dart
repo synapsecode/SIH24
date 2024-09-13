@@ -34,7 +34,7 @@ class _BinOccularsState extends State<BinOcculars> {
   bool settingPermisisonChangeNeeded = false;
 
   loadAssetMarkers() async {
-    cuMarkerIcon = await BitmapDescriptor.fromAssetImage(
+    cuMarkerIcon = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(48, 48)),
       'assets/person.png',
     );
