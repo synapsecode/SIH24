@@ -62,11 +62,11 @@ class DustbinTypeFilterWidget extends StatelessWidget {
       : super(key: key);
 
   final dustbinConfigs = [
-    {'label': 'MAMT', 'color': Colors.blue},
+    {'label': 'QRBIN', 'color': Colors.blue},
     {'label': 'Non-Biodegradable', 'color': Colors.red},
     {'label': 'Biodegradable', 'color': Colors.green},
     {'label': 'Hazardous', 'color': Colors.orange},
-    {'label': 'E-Waste', 'color': Colors.yellow},
+    {'label': 'E-Waste', 'color': Colors.amber},
     {'label': 'Recyclable', 'color': Colors.cyan},
     {'label': 'ALL', 'color': Colors.black},
   ];
@@ -93,6 +93,7 @@ class DustbinTypeFilterWidget extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           fixedSize: const Size.fromWidth(300),
                           backgroundColor: i['color'] as Color,
+                          foregroundColor: Colors.white,
                         ),
                         child: Text(i['label'] as String),
                       )
