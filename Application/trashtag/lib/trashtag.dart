@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:trashtag/backend/TrashTagBackend.dart';
 import 'package:trashtag/services/cameraservice.dart';
 import 'package:trashtag/utils.dart';
 
@@ -18,6 +19,8 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
   int? userID;
   double? userPoints;
   String mode = 'Product';
+
+  final _trBackend = TrashTagBackend();
 
   @override
   void initState() {
@@ -115,7 +118,21 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
   }
 
   initialize() async {
-    //TODO: Implement this once Backend routes are ready
+    final prefs = await SharedPreferences.getInstance();
+    final username = prefs.getString('x-user');
+
+    final uid = await _trBackend.getUserID(username: username!);
+
+    if (uid.result == null) {
+      Toast.show('User Not Found');
+      return;
+    }
+
+    setState(() {
+      userID = uid.result;
+    });
+
+    await getUserPoints();
   }
 
   add2dustbin() async {
@@ -123,6 +140,17 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
   }
 
   getUserPoints() async {
-    //TODO: Implement this once Backend Routes are ready
+    if (userID == null) {
+      Toast.show('Could not Fetch User Points!');
+      return;
+    }
+    final res = await _trBackend.getUserPoints(userID: userID!);
+    if (res.result == null) {
+      Toast.show(res.message);
+      return;
+    }
+    setState(() {
+      userPoints = res.result!;
+    });
   }
 }

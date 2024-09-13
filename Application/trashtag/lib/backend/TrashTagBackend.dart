@@ -70,4 +70,26 @@ class TrashTagBackend {
     print('ERROR => ${res.body}');
     return ResponseType(result: false, message: res.body);
   }
+
+  Future<ResponseType<int?>> getUserID({required String username}) async {
+    final res =
+        await http.get(Uri.parse('$url/user/get_id_by_username/$username'));
+
+    if (res.statusCode == 200) {
+      final resbody = jsonDecode(res.body);
+      final id = int.parse(resbody['id'].toString());
+      return ResponseType(result: id, message: 'success');
+    }
+    return ResponseType(result: null, message: res.body);
+  }
+
+  Future<ResponseType<double?>> getUserPoints({required int userID}) async {
+    final res = await http.get(Uri.parse('$url/user/get_user_points/$userID'));
+    if (res.statusCode == 200) {
+      final resbody = jsonDecode(res.body);
+      final id = double.parse(resbody['points'].toString());
+      return ResponseType(result: id, message: 'success');
+    }
+    return ResponseType(result: null, message: res.body);
+  }
 }
