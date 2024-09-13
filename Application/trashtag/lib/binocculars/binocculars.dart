@@ -35,10 +35,11 @@ class _BinOccularsState extends State<BinOcculars> {
   String? gmapStyleString;
 
   loadAssetMarkers() async {
-    cuMarkerIcon = await BitmapDescriptor.asset(
+    cuMarkerIcon = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(size: Size(48, 48)),
       'assets/person.png',
     );
+    setState(() {});
   }
 
   @override
@@ -188,7 +189,7 @@ class _BinOccularsState extends State<BinOcculars> {
               : Stack(
                   children: [
                     GoogleMap(
-                      // style: gmapStyleString,
+                      style: gmapStyleString,
                       onMapCreated: (controller) {
                         mapController = controller;
                       },
