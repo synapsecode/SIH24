@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Dict
 from sqlalchemy.ext.hybrid import hybrid_method
-from TrashHubBackend import db
+from Backend import db
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
