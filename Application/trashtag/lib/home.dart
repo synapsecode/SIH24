@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:trashtag/binocculars/binocculars.dart';
 import 'package:trashtag/trashtag.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,7 +35,7 @@ class _HomeState extends State<Home> {
     if (pageIndex == 0) {
       return TrashTagFragment();
     } else if (pageIndex == 1) {
-      return const SizedBox();
+      return const BinOcculars();
     }
     return const SizedBox();
   }
