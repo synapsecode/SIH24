@@ -26,4 +26,48 @@ class TrashTagBackend {
     print('ERROR => ${res.body}');
     return ResponseType(result: false, message: res.body);
   }
+
+  Future<ResponseType<bool>> register(
+      {required String name,
+      required String username,
+      required String password}) async {
+    final res = await http.post(
+      Uri.parse("$url/user/register"),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+          {'name': name, 'username': username, 'password': password}),
+    );
+    if (res.statusCode == 200) {
+      return ResponseType(result: true, message: 'success');
+    }
+    print('ERROR => ${res.body}');
+    return ResponseType(result: true, message: res.body.toString());
+  }
+
+  Future<ResponseType<bool>> login(
+      {required String username, required String password}) async {
+    final res = await http.post(
+      Uri.parse("$url/user/login"),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+        {'username': username, 'password': password},
+      ),
+    );
+    if (res.statusCode == 200) {
+      final resdata = jsonDecode(res.body);
+      final succ = resdata['success'] ?? false;
+      if (succ) {
+        return ResponseType(result: true, message: 'success');
+      } else {
+        print("ERROR ===> ${resdata['message']}");
+        return ResponseType(result: false, message: resdata['message']);
+      }
+    }
+    print('ERROR => ${res.body}');
+    return ResponseType(result: false, message: res.body);
+  }
 }
