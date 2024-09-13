@@ -1,4 +1,4 @@
-package com.example.trashtag
+package com.example.trashtrace
 
 import io.flutter.embedding.android.FlutterActivity
 
