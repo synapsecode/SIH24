@@ -7,7 +7,8 @@ import 'package:toast/toast.dart';
 import 'package:trashtag/binocculars/dustbindetails.dart';
 import 'package:trashtag/binocculars/dustbinfilter.dart';
 import 'package:location/location.dart' as loc;
-import 'package:trashtag/binocculars/waypointservice.dart';
+import 'package:trashtag/services/locationservice.dart';
+import 'package:trashtag/services/waypointservice.dart';
 import 'package:trashtag/models/dustbin.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,20 +22,16 @@ class BinOcculars extends StatefulWidget {
 }
 
 class _BinOccularsState extends State<BinOcculars> {
-  final loc.Location location = loc.Location();
-  late StreamSubscription<loc.LocationData> locationSubscription;
   TextEditingController radiusController = TextEditingController();
 
   late GoogleMapController mapController;
-  // late Position userPosition;
-  LatLng? currentUserPosition;
+
   BitmapDescriptor? cuMarkerIcon;
 
   bool loadingBins = true;
   List<Dustbin> dustbins = [];
 
   double? radius;
-  bool settingPermisisonChangeNeeded = false;
   String? gmapStyleString;
 
   loadAssetMarkers() async {
@@ -47,7 +44,7 @@ class _BinOccularsState extends State<BinOcculars> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation().then((_) {
+    LocationService.startLocationListener(context).then((_) {
       loadAssetMarkers();
       getDusbins();
       print('Initial GetDustbins Call Made');
@@ -88,7 +85,7 @@ class _BinOccularsState extends State<BinOcculars> {
     if (radius == null) {
       await getDusbins();
     } else {
-      if (currentUserPosition == null) return;
+      if (LocationService.currentUserPosition == null) return;
       //Implement when API is ready
     }
     print("LATEST DUSTBINS => $dustbins");
@@ -130,7 +127,7 @@ class _BinOccularsState extends State<BinOcculars> {
     markers.add(
       Marker(
         markerId: const MarkerId('cu'),
-        position: currentUserPosition!,
+        position: LocationService.currentUserPosition!,
         icon: cuMarkerIcon ??
             BitmapDescriptor.defaultMarkerWithHue(
               BitmapDescriptor.hueViolet,
@@ -145,19 +142,19 @@ class _BinOccularsState extends State<BinOcculars> {
           position: LatLng(dustbin.latitude, dustbin.longitude),
           icon: getColor(dustbin),
           onTap: () {
-            if (currentUserPosition == null) return;
-            print(currentUserPosition);
+            if (LocationService.currentUserPosition == null) return;
+            print(LocationService.currentUserPosition!);
             showModalBottomSheet(
               context: context,
               builder: (context) {
                 return DustbinDetails(
                   dustbin: dustbin,
-                  userPosition: currentUserPosition!,
+                  userPosition: LocationService.currentUserPosition!,
                   onNavigateClicked: (d) async {
-                    if (currentUserPosition == null) return;
+                    if (LocationService.currentUserPosition == null) return;
                     final z = await WaypointService.startNavigation(
                       'inapp',
-                      currentUserPosition!,
+                      LocationService.currentUserPosition!,
                       d,
                     );
                     if (mounted) {
@@ -177,13 +174,14 @@ class _BinOccularsState extends State<BinOcculars> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: (loadingBins || currentUserPosition == null)
+      backgroundColor: const Color.fromARGB(255, 28, 28, 28),
+      body: (loadingBins || LocationService.currentUserPosition == null)
           ? const Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
               ),
             )
-          : settingPermisisonChangeNeeded
+          : LocationService.settingPermisisonChangeNeeded
               ? Center(
                   child: Text('Go to Settings & Enable Location Permission'),
                 )
@@ -195,7 +193,7 @@ class _BinOccularsState extends State<BinOcculars> {
                         mapController = controller;
                       },
                       initialCameraPosition: CameraPosition(
-                        target: currentUserPosition!,
+                        target: LocationService.currentUserPosition!,
                         zoom: 14,
                       ),
                       markers: getMarkers(),
@@ -230,7 +228,8 @@ class _BinOccularsState extends State<BinOcculars> {
                               foregroundColor: Colors.white,
                               onPressed: () async {
                                 await mapController.animateCamera(
-                                  CameraUpdate.newLatLng(currentUserPosition!),
+                                  CameraUpdate.newLatLng(
+                                      LocationService.currentUserPosition!),
                                 );
                                 await Future.delayed(const Duration(seconds: 1),
                                     () {
@@ -272,47 +271,9 @@ class _BinOccularsState extends State<BinOcculars> {
     });
   }
 
-  Future<void> _getCurrentLocation([int retryCount = 0]) async {
-    //TODO: Goes into infinite loop if i try more than twice
-    Stream<loc.LocationData>? sub;
-    try {
-      sub = await Utils.initalizeLocationServices(
-        context: context,
-        locationInstance: location,
-        onFirstLocationReceived: (lc) {
-          if (lc.latitude == null || lc.longitude == null) return;
-          currentUserPosition = LatLng(lc.latitude!, lc.longitude!);
-          print('CurrentUserPosition Updated!');
-        },
-      );
-      if (sub == null) return;
-    } catch (e) {
-      print('EXCEPTION => $e');
-      ToastContext().init(context);
-      Toast.show('Accept Background Location Permission!');
-      if (retryCount > 5) {
-        Toast.show('Go to Settings & Change Location Permission');
-        setState(() {
-          settingPermisisonChangeNeeded = true;
-        });
-        return;
-      }
-      return _getCurrentLocation(retryCount++);
-    }
-
-    locationSubscription = sub!.listen((loc) {
-      print('CurrentUserLocUpdated => $loc');
-      currentUserPosition = LatLng(loc.latitude!, loc.longitude!);
-      if (mounted) {
-        setState(() {});
-      }
-    });
-    setState(() {});
-  }
-
   @override
   void dispose() {
-    locationSubscription.cancel();
+    LocationService.resetLocationService();
     super.dispose();
   }
 }

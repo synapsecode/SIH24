@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:trashtag/binocculars/addbindialog.dart';
 import 'package:trashtag/binocculars/binocculars.dart';
+import 'package:trashtag/extensions/miscextensions.dart';
+import 'package:trashtag/services/locationservice.dart';
 import 'package:trashtag/trashtag.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,9 +36,13 @@ class _HomeState extends State<Home> {
 
   getContent() {
     if (pageIndex == 0) {
-      return TrashTagFragment();
+      return TrashTagFragment(
+        key: ValueKey('TT'),
+      );
     } else if (pageIndex == 1) {
-      return const BinOcculars();
+      return const BinOcculars(
+        key: ValueKey('BINOC'),
+      );
     }
     return const SizedBox();
   }
@@ -46,12 +53,22 @@ class _HomeState extends State<Home> {
     if (pageIndex == 1) {
       return FloatingActionButton(
         backgroundColor: Colors.green,
-        onPressed: () {},
+        onPressed: () {
+          if (LocationService.currentUserPosition == null) return;
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AddDustbinDialog(
+                currentLocation: LocationService.currentUserPosition!,
+              );
+            },
+          );
+        },
         child: Icon(
           Icons.add,
           color: Colors.white,
         ),
-      );
+      ).addRightMargin(MediaQuery.of(context).size.width - 80);
     }
     return SizedBox();
   }

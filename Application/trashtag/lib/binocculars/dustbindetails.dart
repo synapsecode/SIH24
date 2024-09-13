@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:trashtag/binocculars/waypointservice.dart';
+import 'package:trashtag/services/waypointservice.dart';
 import 'package:trashtag/extensions/extensions.dart';
 import 'package:trashtag/models/dustbin.dart';
 import 'package:url_launcher/url_launcher.dart';

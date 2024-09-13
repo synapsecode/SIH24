@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:trashtag/services/cameraservice.dart';
 import 'package:trashtag/utils.dart';
 
 class TrashTagFragment extends StatefulWidget {
@@ -74,7 +75,7 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
 
   Future<String?> scanQR() async {
     ToastContext().init(context);
-    final s = await Utils.requestCameraPermission();
+    final s = await CameraService.requestCameraPermission();
     if (!s) {
       Toast.show('Camera Permission not given');
       return null;
