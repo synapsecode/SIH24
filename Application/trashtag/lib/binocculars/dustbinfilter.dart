@@ -93,6 +93,7 @@ class DustbinTypeFilterWidget extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           fixedSize: const Size.fromWidth(300),
                           backgroundColor: i['color'] as Color,
+                          foregroundColor: Colors.white,
                         ),
                         child: Text(i['label'] as String),
                       )

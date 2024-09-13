@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:toast/toast.dart';
 import 'package:trashtag/binocculars/dustbindetails.dart';
 import 'package:trashtag/binocculars/dustbinfilter.dart';
 import 'package:location/location.dart' as loc;
+import 'package:trashtag/binocculars/waypointservice.dart';
 import 'package:trashtag/models/dustbin.dart';
+import 'package:http/http.dart' as http;
 
 import '../utils.dart';
 
@@ -30,8 +34,8 @@ class _BinOccularsState extends State<BinOcculars> {
   List<Dustbin> dustbins = [];
 
   double? radius;
-
   bool settingPermisisonChangeNeeded = false;
+  String? gmapStyleString;
 
   loadAssetMarkers() async {
     cuMarkerIcon = await BitmapDescriptor.fromAssetImage(
@@ -48,16 +52,30 @@ class _BinOccularsState extends State<BinOcculars> {
       getDusbins();
       print('Initial GetDustbins Call Made');
     });
-  }
-
-  @override
-  void dispose() {
-    locationSubscription.cancel();
-    super.dispose();
+    rootBundle.loadString('assets/maptheme.json').then((x) {
+      setState(() {
+        gmapStyleString = x;
+      });
+    });
   }
 
   getDusbins() async {
     //Implement when API is ready
+
+    dustbins = [
+      Dustbin(
+        type: 'Non-Biodegradable',
+        latitude: 12.994943657557917,
+        longitude: 77.89001274479656,
+        name: '35M16CRS',
+      ),
+      Dustbin(
+        type: 'Non-Biodegradable',
+        latitude: 12.924549657557917,
+        longitude: 77.58841274479656,
+        name: 'TEST2',
+      )
+    ];
     setState(() {
       loadingBins = false;
     });
@@ -78,44 +96,6 @@ class _BinOccularsState extends State<BinOcculars> {
       loadingBins = false;
       dustbins = [...dustbins];
     });
-  }
-
-  Future<void> _getCurrentLocation([int retryCount = 0]) async {
-    //TODO: Goes into infinite loop if i try more than twice
-    Stream<loc.LocationData>? sub;
-    try {
-      sub = await Utils.initalizeLocationServices(
-        context: context,
-        locationInstance: location,
-        onFirstLocationReceived: (lc) {
-          if (lc.latitude == null || lc.longitude == null) return;
-          currentUserPosition = LatLng(lc.latitude!, lc.longitude!);
-          print('CurrentUserPosition Updated!');
-        },
-      );
-      if (sub == null) return;
-    } catch (e) {
-      print('EXCEPTION => $e');
-      ToastContext().init(context);
-      Toast.show('Accept Background Location Permission!');
-      if (retryCount > 5) {
-        Toast.show('Go to Settings & Change Location Permission');
-        setState(() {
-          settingPermisisonChangeNeeded = true;
-        });
-        return;
-      }
-      return _getCurrentLocation(retryCount++);
-    }
-
-    locationSubscription = sub!.listen((loc) {
-      print('CurrentUserLocUpdated => $loc');
-      currentUserPosition = LatLng(loc.latitude!, loc.longitude!);
-      if (mounted) {
-        setState(() {});
-      }
-    });
-    setState(() {});
   }
 
   BitmapDescriptor getColor(Dustbin x) {
@@ -173,6 +153,17 @@ class _BinOccularsState extends State<BinOcculars> {
                 return DustbinDetails(
                   dustbin: dustbin,
                   userPosition: currentUserPosition!,
+                  onNavigateClicked: (d) async {
+                    if (currentUserPosition == null) return;
+                    final z = await WaypointService.startNavigation(
+                      'inapp',
+                      currentUserPosition!,
+                      d,
+                    );
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  },
                 );
               },
             );
@@ -181,16 +172,6 @@ class _BinOccularsState extends State<BinOcculars> {
       );
     }
     return markers.toSet();
-  }
-
-  getDustbinsBasedOnFilter(String filter) async {
-    await getDusbins();
-    if (filter != 'ALL') {
-      dustbins = dustbins.where((e) => e.type == filter).toList();
-    }
-    setState(() {
-      dustbins = [...dustbins];
-    });
   }
 
   @override
@@ -209,6 +190,7 @@ class _BinOccularsState extends State<BinOcculars> {
               : Stack(
                   children: [
                     GoogleMap(
+                      style: gmapStyleString,
                       onMapCreated: (controller) {
                         mapController = controller;
                       },
@@ -217,6 +199,7 @@ class _BinOccularsState extends State<BinOcculars> {
                         zoom: 14,
                       ),
                       markers: getMarkers(),
+                      polylines: WaypointService.routePolygons,
                     ),
                     Positioned(
                       right: 0,
@@ -257,6 +240,19 @@ class _BinOccularsState extends State<BinOcculars> {
                               },
                               child: const Icon(Icons.home),
                             ),
+                            if (WaypointService.routePolygons.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: FloatingActionButton(
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  onPressed: () async {
+                                    WaypointService.endInAppNavigation();
+                                    setState(() {});
+                                  },
+                                  child: const Icon(Icons.clear),
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -264,5 +260,59 @@ class _BinOccularsState extends State<BinOcculars> {
                   ],
                 ),
     );
+  }
+
+  getDustbinsBasedOnFilter(String filter) async {
+    await getDusbins();
+    if (filter != 'ALL') {
+      dustbins = dustbins.where((e) => e.type == filter).toList();
+    }
+    setState(() {
+      dustbins = [...dustbins];
+    });
+  }
+
+  Future<void> _getCurrentLocation([int retryCount = 0]) async {
+    //TODO: Goes into infinite loop if i try more than twice
+    Stream<loc.LocationData>? sub;
+    try {
+      sub = await Utils.initalizeLocationServices(
+        context: context,
+        locationInstance: location,
+        onFirstLocationReceived: (lc) {
+          if (lc.latitude == null || lc.longitude == null) return;
+          currentUserPosition = LatLng(lc.latitude!, lc.longitude!);
+          print('CurrentUserPosition Updated!');
+        },
+      );
+      if (sub == null) return;
+    } catch (e) {
+      print('EXCEPTION => $e');
+      ToastContext().init(context);
+      Toast.show('Accept Background Location Permission!');
+      if (retryCount > 5) {
+        Toast.show('Go to Settings & Change Location Permission');
+        setState(() {
+          settingPermisisonChangeNeeded = true;
+        });
+        return;
+      }
+      return _getCurrentLocation(retryCount++);
+    }
+
+    locationSubscription = sub!.listen((loc) {
+      print('CurrentUserLocUpdated => $loc');
+      currentUserPosition = LatLng(loc.latitude!, loc.longitude!);
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    locationSubscription.cancel();
+    super.dispose();
   }
 }

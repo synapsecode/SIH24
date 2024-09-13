@@ -42,16 +42,48 @@ class _HomeState extends State<Home> {
 
   TextEditingController serverLinkController = TextEditingController();
 
+  Widget getFAB() {
+    if (pageIndex == 1) {
+      return FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () {},
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      );
+    }
+    return SizedBox();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: getFAB(),
       appBar: AppBar(
-        title: Text(appBar),
+        title: Text(
+          appBar,
+          style: TextStyle(color: Colors.white),
+        ),
         leading: appBarLogo,
         actions: [
-          IconButton(icon: Icon(Icons.logout), onPressed: () {}),
+          IconButton(
+              icon: Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+              onPressed: () {}),
+          IconButton(
+            icon: Icon(
+              Icons.info,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              showCreditsDialog(context);
+            },
+          ),
         ],
-        backgroundColor: Colors.cyan[200],
+        backgroundColor: Colors.green,
       ),
       body: getContent(),
       bottomNavigationBar: GNav(
@@ -77,6 +109,99 @@ class _HomeState extends State<Home> {
           GButton(icon: Icons.pin_drop_rounded, text: 'BinOcculars'),
         ],
       ),
+    );
+  }
+
+  void showCreditsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.emoji_events_outlined,
+                  size: 60,
+                  color: Colors.teal,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'TrashTag App',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'SIH 2024 Submission',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Developed by:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  runSpacing: 0,
+                  children: [
+                    _buildChip('Manas'),
+                    _buildChip('Somnath'),
+                    _buildChip('Koushik'),
+                    _buildChip('Daksh'),
+                    _buildChip('Sahil'),
+                    _buildChip('Ishija'),
+                  ],
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildChip(String name) {
+    return Chip(
+      label: Text(name),
+      labelStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      backgroundColor: Colors.teal,
+      elevation: 2,
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
     );
   }
 }
