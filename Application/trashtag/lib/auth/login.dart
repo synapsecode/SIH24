@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 200, 241, 244),
       appBar: AppBar(
-        title: const Text("Log In"),
+        title: const Text("TrashTag Login"),
       ),
       body: Center(
         child: Container(
