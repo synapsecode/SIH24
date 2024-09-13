@@ -33,7 +33,7 @@ def create_app(config_class=Config):
 
 #Helper function to create database file directly from terminal
 def create_database():
-	import TrashHubBackend.models
+	# import Backend.models
 	print("Creating App & Database")
 	app = create_app()
 	with app.app_context():
