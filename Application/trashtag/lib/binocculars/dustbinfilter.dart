@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trashtag/extensions/extensions.dart';
 
 class DustbinDistanceFilterWidget extends StatelessWidget {
   final TextEditingController radiusController;
@@ -19,7 +20,8 @@ class DustbinDistanceFilterWidget extends StatelessWidget {
           context: context,
           builder: (ctx) {
             return AlertDialog(
-              title: const Text('Distance Filter'),
+              backgroundColor: const Color.fromARGB(255, 25, 25, 25),
+              title: Text('Distance Filter').color(Colors.white),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -30,21 +32,27 @@ class DustbinDistanceFilterWidget extends StatelessWidget {
                     decoration: const InputDecoration(
                       label: Text(
                         'Distance (km)',
-                        style: TextStyle(color: Colors.black45),
+                        style: TextStyle(color: Colors.white54),
                       ),
                     ),
+                    style: TextStyle(color: Colors.white60),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final d = radiusController.value.text;
-                      if (d.isEmpty) {
-                        onRadiusSelected(null);
-                      } else {
-                        final radius = double.tryParse(d);
-                        onRadiusSelected(radius);
-                      }
-                    },
-                    child: const Text('Search'),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final d = radiusController.value.text;
+                          if (d.isEmpty) {
+                            onRadiusSelected(null);
+                          } else {
+                            final radius = double.tryParse(d);
+                            onRadiusSelected(radius);
+                          }
+                        },
+                        child: const Text('Search'),
+                      ).expanded(),
+                    ],
                   )
                 ],
               ),
@@ -80,7 +88,8 @@ class DustbinTypeFilterWidget extends StatelessWidget {
           context: context,
           builder: (ctx) {
             return AlertDialog(
-              title: const Text('Filter Dustbins'),
+              backgroundColor: Color.fromARGB(255, 16, 15, 15),
+              title: Text('Filter Dustbins').color(Colors.white),
               content: SizedBox(
                 height: 350,
                 child: Column(

@@ -145,11 +145,7 @@ class _HomeState extends State<Home> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.emoji_events_outlined,
-                  size: 60,
-                  color: Colors.teal,
-                ),
+                Image.asset('assets/2.png'),
                 SizedBox(height: 20),
                 Text(
                   'TrashTag App',

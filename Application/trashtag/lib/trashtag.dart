@@ -32,11 +32,11 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
           image: DecorationImage(
         image: AssetImage('assets/TrashTraceBg.png'),
         colorFilter: ColorFilter.mode(
-            Color.fromARGB(255, 192, 212, 197), BlendMode.screen),
+            Color.fromARGB(255, 221, 240, 210), BlendMode.darken),
         fit: BoxFit.cover,
       )),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (mode == 'loading') ...[
@@ -46,6 +46,8 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
               ),
             ),
           ] else ...[
+            Image.asset('assets/2.png'),
+            SizedBox(height: 50),
             Text(
               'Scan $mode',
               style: const TextStyle(
@@ -59,6 +61,7 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
               child: InkWell(
                 onTap: onScanButtonPressed,
                 child: const CircleAvatar(
+                  backgroundColor: Colors.greenAccent,
                   radius: 70,
                   child: Icon(
                     Icons.qr_code,
@@ -67,6 +70,7 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
                 ),
               ),
             ),
+            Expanded(child: Container()),
           ],
         ],
       ),
