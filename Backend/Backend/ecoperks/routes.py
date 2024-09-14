@@ -245,8 +245,7 @@ def create_batch():
 		'id': b.id
 	}), 200
 
-@ecoperks.route('/manufacturer/get_batch_qrset/<bid>')
-def get_batch_qrset(bid):
+def get_batch_qrset_core(bid, api=False):
 	b = ProductBatch.query.filter_by(id=bid).first()
 	if(b == None):
 		return 'Batch Does Not Exist', 400
@@ -254,8 +253,18 @@ def get_batch_qrset(bid):
 	for e in b.entities:
 		codes.append(f'{b.id}:{e.id}')
 	print(f'Generated Codes => {codes}')
+	if(api):
+		return jsonify(codes)
 
 	return render_template('qrset.html', codes=codes)
+
+@ecoperks.route('/manufacturer/get_batch_qrset/<bid>')
+def get_batch_qrset(bid):
+	return get_batch_qrset_core(bid)
+
+@ecoperks.route('/manufacturer/get_batch_qrset/<bid>/api')
+def get_batch_qrset(bid):
+	return get_batch_qrset_core(bid, api=True)
 
 
 def get_analytics_core(mid, api=False):
@@ -344,43 +353,8 @@ def add_dustbin():
 	lng = location['lng']
 	vid = data['vid'] if 'vid' in data else None
 
-
 	if name is None or type is None or location is None:
 		return "Missing Parameters", 400
-	
-	if type == 'QRBIN':
-		if vid is None:
-			return "Vendor Id required", 400
-	
-	# nearby_dustbins = BinoccularDustbin.query.filter(
-	# 	BinoccularDustbin.type == type,
-	# 	func.ST_Distance_Sphere(
-	# 		BinoccularDustbin.location,
-	# 		func.ST_MakePoint(lat,lng)
-	# 	) < 100
-	# ).all()
-
-	lat = float(lat)
-	lng = float(lng)
-	# 1 degree of lat/lng is 111km => 1km = 0.00900901 degrees
-	thresh = (0.05 * 0.00900901)
-
-	# def dist(x1,y1,x2,y2):
-	# 	import math
-	# 	return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-
-	if type != "QRBIN":
-		nearby_bins = BinoccularDustbin.query \
-			.filter(BinoccularDustbin.type == type) \
-			.filter(BinoccularDustbin.lat <= lat + thresh)\
-			.filter(BinoccularDustbin.lat >= lat - thresh)\
-			.filter(BinoccularDustbin.lng <= lng + thresh)\
-			.filter(BinoccularDustbin.lng >= lng - thresh)\
-			.all()
-
-		if nearby_bins:
-			return "Dustbin already exists in this area", 400
-
 	dustbin = BinoccularDustbin(name=name, type=type,lat=lat,lng=lng,vid=vid)
 
 	db.session.add(dustbin)
