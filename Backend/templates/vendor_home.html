@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Home</title>
+
+    <style>
+        body {
+            background-color: rgba(46, 139, 86, 0.538);
+            padding: 50px;
+        }
+
+        .wrapper {
+            padding: 20px;
+            display: inline-grid;
+            grid-template-columns: repeat(4, [col-start] 1fr);
+            grid-gap: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Vendor Home</h1>
+
+    <button onclick="createQRBIN()">Create QRBIN</button>
+    <br><br><br><br>
+    <div class="grid wrapper">
+        {% for bin in qrbins %}
+        <div>
+            <h1>{{bin.name}}</h1>
+            <img src="{{ qrcode(bin) }}" height="200px" width="200px" style="margin-left: 20px" />
+        </div>
+
+
+
+        {% endfor %}
+    </div>
+</body>
+
+<script>
+    const createQRBIN = async () => {
+        console.log('hi');
+
+        const loc = await getUserLocation();
+
+        const payload = {
+            'name': '{{vname}}_{{bincount + 1}}',
+            'type': 'QRBIN',
+            'location': {
+                'lat': loc[0],
+                'lng': loc[1],
+            },
+            'vid': '{{vid}}',
+        };
+
+        console.log(payload);
+
+        const response = await fetch("/ecoperks/add_dustbin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload)
+        });
+        if (response.status === 200) {
+            window.location.reload();
+        } else {
+            alert('Unexpected Error Occured');
+        }
+    }
+
+
+    async function getUserLocation() {
+        function getLocation() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
+                            resolve({ latitude, longitude });
+                        },
+                        (error) => {
+                            reject(`Error occurred: ${error.message}`);
+                        }
+                    );
+                } else {
+                    reject("Geolocation is not supported by this browser.");
+                }
+            });
+        }
+
+        try {
+            const location = await getLocation();
+            return [location.latitude, location.longitude];
+        } catch (error) {
+            console.log(error);
+            return [null, null];
+        }
+    }
+</script>
+
+</html>

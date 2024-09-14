@@ -28,15 +28,18 @@ class BinoccularDustbin(db.Model):
 	type = db.Column(db.String)
 	lat = db.Column(db.Float)
 	lng = db.Column(db.Float)
+	
+	vendor_id = db.Column(db.Integer, nullable=True)
 
 	def __repr__(self):
 		return f"BinOccularDusbin({self.name}, {self.name}, ({self.lat}, {self.lng}))"
 	
-	def __init__( self, name='default', type='regular', lat=0.0, lng=0.0):
+	def __init__( self, name='default', type='regular', lat=0.0, lng=0.0, vid=None):
 		self.name = str(name)
 		self.type = str(type)
 		self.lat = float(str(lat))
 		self.lng = float(str(lng))
+		self.vendor_id = vid
 
 	def toJson(self) -> Dict:
 		return {
@@ -44,6 +47,8 @@ class BinoccularDustbin(db.Model):
 			'type': self.type,
 			'lat': self.lat,
 			'lng': self.lng,
+			'vid': self.vendor_id,
+			'qrcode': f"{self.vendor_id}:{self.id}"
 		}
 
 # ============================ (TrashTag) ================================
@@ -122,7 +127,7 @@ class ProductEntity(db.Model):
 	batch_id = db.Column(db.Integer, db.ForeignKey('product_batch.id'))
 	disposed = db.Column(db.Boolean, default=False)
 	purchased = db.Column(db.Boolean, default=False)
-	disposed_by = db.Column(db.Integer, nullable=False)
+	disposed_by = db.Column(db.Integer, nullable=False, default=-1)
 
 	def __init__(self, batch):
 		self.batch = batch
