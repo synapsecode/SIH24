@@ -263,7 +263,7 @@ def get_batch_qrset(bid):
 	return get_batch_qrset_core(bid)
 
 @ecoperks.route('/manufacturer/get_batch_qrset/<bid>/api')
-def get_batch_qrset(bid):
+def get_batch_qrset_api(bid):
 	return get_batch_qrset_core(bid, api=True)
 
 
