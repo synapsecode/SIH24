@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:trashtag/globalvariables.dart';
+import 'package:trashtag/models/user.dart';
 
 import '../models/dustbin.dart';
 
@@ -159,5 +160,22 @@ class TrashTagBackend {
       );
     }
     return ResponseType(result: dustbins, message: 'success');
+  }
+
+  Future<ResponseType<List<User>?>> getLeaderboard() async {
+    List<User> users = [];
+    final res = await http.get(Uri.parse("$url/ecoperks/get_leaderboard"));
+    if (res.statusCode == 200) {
+      final resdata = jsonDecode(res.body);
+      for (final r in resdata) {
+        final u = User.fromJson(r);
+        users.add(u);
+      }
+      print(users);
+    } else {
+      return ResponseType(
+          result: null, message: 'Server Side Error (${res.statusCode})');
+    }
+    return ResponseType(result: users, message: 'success');
   }
 }

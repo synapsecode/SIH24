@@ -351,3 +351,9 @@ def add_dustbin():
 	db.session.add(dustbin)
 	db.session.commit()
 	return "Dustbin Added", 200
+
+@ecoperks.route("/get_leaderboard", methods = ['GET'])
+def get_leaderboard():
+	u = User.query.order_by(User.points.desc())
+	leaderboard = [user.toJson() for user in u]
+	return jsonify(leaderboard), 200

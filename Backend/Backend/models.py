@@ -20,6 +20,14 @@ class User(db.Model):
 		self.username = username
 		self.password = password
 
+	def toJson(self) -> Dict:
+		return {
+			'id': self.id,
+			'name': self.name,
+			'username': self.username,
+			'points': self.points
+			}
+
 # ============================ (BinOcculars) ================================
 
 class BinoccularDustbin(db.Model):
