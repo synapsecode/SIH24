@@ -104,7 +104,7 @@ class TrashTagBackend {
     required String qrCodeValue,
   }) async {
     final res = await http.post(
-      Uri.parse('$url/trashtag/userscan'),
+      Uri.parse('$url/ecoperks/userscan'),
       headers: {
         'Content-Type': 'application/json',
       },
