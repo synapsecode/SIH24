@@ -12,10 +12,6 @@ class User(db.Model):
 
 	points = db.Column(db.Float, default=0.0)
 
-	# Relationships
-	RCXJobs = db.relationship('RCXJob', backref='client')
-	
-
 	def __repr__(self):
 		return f"User({self.name}, {self.username})"
 	
