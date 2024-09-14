@@ -28,7 +28,7 @@ class _BinOccularsState extends State<BinOcculars> {
   late GoogleMapController mapController;
 
   BitmapDescriptor? cuMarkerIcon;
-
+  // LatLng? currentUserPosition;
   bool loadingBins = true;
   List<Dustbin> dustbins = [];
 
@@ -105,7 +105,21 @@ class _BinOccularsState extends State<BinOcculars> {
       await getDusbins();
     } else {
       if (LocationService.currentUserPosition == null) return;
-      //Implement when API is ready
+      final z = await TrashTagBackend().getNearestBins(
+        lat: LocationService.currentUserPosition!.latitude,
+        lng: LocationService.currentUserPosition!.longitude,
+        radius: radius!,
+      );
+      if (z.result == null) {
+        // ignore: use_build_context_synchronously
+        Utils.showUserDialog(
+          context: context,
+          title: 'ERROR',
+          content: z.message,
+        );
+        return;
+      }
+      dustbins = z.result!;
     }
     print("LATEST DUSTBINS => $dustbins");
     setState(() {
