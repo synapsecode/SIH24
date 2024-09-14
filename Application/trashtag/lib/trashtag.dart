@@ -119,6 +119,7 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
     final uid = await _trBackend.getUserID(username: username!);
 
     if (uid.result == null) {
+      ToastContext().init(context);
       Toast.show('User Not Found');
       return;
     }

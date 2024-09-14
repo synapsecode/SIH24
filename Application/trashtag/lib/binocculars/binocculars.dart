@@ -35,7 +35,7 @@ class _BinOccularsState extends State<BinOcculars> {
   String? gmapStyleString;
 
   loadAssetMarkers() async {
-    cuMarkerIcon = await BitmapDescriptor.fromAssetImage(
+    cuMarkerIcon = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(48, 48)),
       'assets/person.png',
     );
@@ -45,11 +45,11 @@ class _BinOccularsState extends State<BinOcculars> {
   @override
   void initState() {
     super.initState();
-    LocationService.startLocationListener(context).then((_) {
-      loadAssetMarkers();
-      getDusbins();
-      print('Initial GetDustbins Call Made');
-    });
+    // LocationService.startLocationListener(context).then((_) {
+    //   loadAssetMarkers();
+    //   getDusbins();
+    //   print('Initial GetDustbins Call Made');
+    // });
     rootBundle.loadString('assets/maptheme.json').then((x) {
       setState(() {
         gmapStyleString = x;

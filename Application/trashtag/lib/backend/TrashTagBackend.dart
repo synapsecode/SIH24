@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:trashtag/globalvariables.dart';
 
@@ -14,12 +15,15 @@ class ResponseType<T> {
 }
 
 class TrashTagBackend {
-  Future<ResponseType<void>> addDustbin(
+  Future<ResponseType<bool>> addDustbin(
       {required String name,
       required String type,
-      required Map<String, dynamic> location}) async {
+      required LatLng location}) async {
+    final jsonloc = {'lat': location.latitude, 'lng': location.longitude};
+    print(jsonEncode({"name": name, "type": type, "location": jsonloc}));
     final res = await http.post(Uri.parse("$url/ecoperks/add_dustbin"),
-        body: jsonEncode({"name": name, "type": type, "location": location}));
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"name": name, "type": type, "location": jsonloc}));
     if (res.statusCode == 200) {
       return ResponseType(result: true, message: res.body);
     }

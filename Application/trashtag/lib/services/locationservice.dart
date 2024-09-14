@@ -78,7 +78,7 @@ class LocationService {
 
   static final loc.Location location = loc.Location();
   static StreamSubscription<loc.LocationData>? locationSubscription;
-  static LatLng? currentUserPosition;
+  static LatLng? currentUserPosition = LatLng(12.9728512, 77.6077312);
 
   static bool settingPermisisonChangeNeeded = false;
 
