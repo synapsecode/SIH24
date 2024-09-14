@@ -108,6 +108,7 @@ class LocationService {
       print('EXCEPTION => $e');
       ToastContext().init(context);
       Toast.show('Accept Background Location Permission!');
+      retryCount++;
       if (retryCount > 5) {
         Toast.show('Go to Settings & Change Location Permission');
         settingPermisisonChangeNeeded = true;

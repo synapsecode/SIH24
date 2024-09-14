@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:trashtag/globalvariables.dart';
 
+import '../models/dustbin.dart';
+
 class ResponseType<T> {
   T result;
   String message;
@@ -115,5 +117,24 @@ class TrashTagBackend {
     }
     print('ERROR => ${res.body}');
     return ResponseType(result: false, message: res.body);
+  }
+
+  Future<ResponseType<List<Dustbin>?>> getAllBins() async {
+    List<Dustbin> dustbins = [];
+    final res = await http.get(Uri.parse("$url/binocculars/get_all"));
+
+    if (res.statusCode == 200) {
+      final resdata = jsonDecode(res.body);
+      for (final r in resdata) {
+        final d = Dustbin.fromJson(r);
+        dustbins.add(d);
+      }
+    } else {
+      return ResponseType(
+        result: null,
+        message: 'Server Side Error (${res.statusCode})',
+      );
+    }
+    return ResponseType(result: dustbins, message: 'success');
   }
 }

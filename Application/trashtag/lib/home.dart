@@ -138,6 +138,7 @@ class _HomeState extends State<Home> {
         tabs: const [
           GButton(icon: Icons.qr_code_scanner, text: 'TrashTag'),
           GButton(icon: Icons.pin_drop_rounded, text: 'BinOcculars'),
+          GButton(icon: Icons.leaderboard, text: 'Leaderboard'),
         ],
       ),
     );
