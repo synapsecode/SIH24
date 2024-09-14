@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:trashtag/globalvariables.dart';
+
+import '../models/dustbin.dart';
 
 class ResponseType<T> {
   T result;
@@ -14,12 +17,15 @@ class ResponseType<T> {
 }
 
 class TrashTagBackend {
-  Future<ResponseType<void>> addDustbin(
+  Future<ResponseType<bool>> addDustbin(
       {required String name,
       required String type,
-      required Map<String, dynamic> location}) async {
+      required LatLng location}) async {
+    final jsonloc = {'lat': location.latitude, 'lng': location.longitude};
+    print(jsonEncode({"name": name, "type": type, "location": jsonloc}));
     final res = await http.post(Uri.parse("$url/ecoperks/add_dustbin"),
-        body: jsonEncode({"name": name, "type": type, "location": location}));
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"name": name, "type": type, "location": jsonloc}));
     if (res.statusCode == 200) {
       return ResponseType(result: true, message: res.body);
     }
@@ -111,5 +117,24 @@ class TrashTagBackend {
     }
     print('ERROR => ${res.body}');
     return ResponseType(result: false, message: res.body);
+  }
+
+  Future<ResponseType<List<Dustbin>?>> getAllBins() async {
+    List<Dustbin> dustbins = [];
+    final res = await http.get(Uri.parse("$url/binocculars/get_all"));
+
+    if (res.statusCode == 200) {
+      final resdata = jsonDecode(res.body);
+      for (final r in resdata) {
+        final d = Dustbin.fromJson(r);
+        dustbins.add(d);
+      }
+    } else {
+      return ResponseType(
+        result: null,
+        message: 'Server Side Error (${res.statusCode})',
+      );
+    }
+    return ResponseType(result: dustbins, message: 'success');
   }
 }

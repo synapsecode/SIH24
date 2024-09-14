@@ -12,6 +12,7 @@ import 'package:trashtag/services/waypointservice.dart';
 import 'package:trashtag/models/dustbin.dart';
 import 'package:http/http.dart' as http;
 
+import '../backend/TrashTagBackend.dart';
 import '../utils.dart';
 
 class BinOcculars extends StatefulWidget {
@@ -35,11 +36,11 @@ class _BinOccularsState extends State<BinOcculars> {
   String? gmapStyleString;
 
   loadAssetMarkers() async {
-    cuMarkerIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(48, 48)),
-      'assets/person.png',
-    );
-    setState(() {});
+    // cuMarkerIcon = await BitmapDescriptor.asset(
+    //   const ImageConfiguration(size: Size(48, 48)),
+    //   'assets/person.png',
+    // );
+    // setState(() {});
   }
 
   @override
@@ -58,24 +59,41 @@ class _BinOccularsState extends State<BinOcculars> {
   }
 
   getDusbins() async {
-    //Implement when API is ready
+    // dustbins = [
+    //   Dustbin(
+    //     type: 'Non-Biodegradable',
+    //     latitude: 12.994943657557917,
+    //     longitude: 77.89001274479656,
+    //     name: '35M16CRS',
+    //   ),
+    //   Dustbin(
+    //     type: 'Non-Biodegradable',
+    //     latitude: 12.924549657557917,
+    //     longitude: 77.58841274479656,
+    //     name: 'TEST2',
+    //   )
+    // ];
+    // setState(() {
+    //   loadingBins = false;
+    // });
 
-    dustbins = [
-      Dustbin(
-        type: 'Non-Biodegradable',
-        latitude: 12.994943657557917,
-        longitude: 77.89001274479656,
-        name: '35M16CRS',
-      ),
-      Dustbin(
-        type: 'Non-Biodegradable',
-        latitude: 12.924549657557917,
-        longitude: 77.58841274479656,
-        name: 'TEST2',
-      )
-    ];
+    setState(() {
+      loadingBins = true;
+    });
+    final res = await TrashTagBackend().getAllBins();
+    if (res.result == null) {
+      // ignore: use_build_context_synchronously
+      Utils.showUserDialog(
+        context: context,
+        title: 'ERROR',
+        content: res.message,
+      );
+      return;
+    }
+    dustbins = res.result!;
     setState(() {
       loadingBins = false;
+      dustbins = [...dustbins];
     });
   }
 

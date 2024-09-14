@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:trashtag/auth/login.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
 import 'package:trashtag/binocculars/addbindialog.dart';
 import 'package:trashtag/binocculars/binocculars.dart';
 import 'package:trashtag/extensions/miscextensions.dart';
@@ -92,7 +93,17 @@ class _HomeState extends State<Home> {
                 Icons.logout,
                 color: Colors.white,
               ),
-              onPressed: () {}),
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('x-user');
+                print('Logged Out!');
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) {
+                    return const LoginScreen();
+                  }),
+                  (route) => false,
+                );
+              }),
           IconButton(
             icon: Icon(
               Icons.info,
@@ -127,6 +138,7 @@ class _HomeState extends State<Home> {
         tabs: const [
           GButton(icon: Icons.qr_code_scanner, text: 'TrashTag'),
           GButton(icon: Icons.pin_drop_rounded, text: 'BinOcculars'),
+          GButton(icon: Icons.leaderboard, text: 'Leaderboard'),
         ],
       ),
     );

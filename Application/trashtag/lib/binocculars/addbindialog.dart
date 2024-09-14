@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:toast/toast.dart';
+import 'package:trashtag/backend/TrashTagBackend.dart';
 
 class AddDustbinDialog extends StatefulWidget {
   final LatLng currentLocation;
@@ -12,6 +14,28 @@ class AddDustbinDialog extends StatefulWidget {
 class _AddDustbinDialogState extends State<AddDustbinDialog> {
   String selectedType = "";
   final TextEditingController dustbinNameController = TextEditingController();
+  final _trBackend = TrashTagBackend();
+  void addDustbin() async {
+    if (selectedType != "") {
+      selectedType = 'General';
+    }
+    if (dustbinNameController.text.isEmpty) {
+      ToastContext().init(context);
+      Toast.show('Enter name');
+    } else {
+      print('object');
+      final response = await _trBackend.addDustbin(
+          name: dustbinNameController.text,
+          location: widget.currentLocation,
+          type: selectedType);
+      if (response.result == true) {
+        Navigator.pop(context);
+        Toast.show(response.message);
+      } else {
+        Toast.show("Couldn't Add dustbin");
+      }
+    }
+  }
 
   final List<String> dustbinTypes = [
     'QRBIN',
@@ -118,7 +142,7 @@ class _AddDustbinDialogState extends State<AddDustbinDialog> {
                       'lng': widget.currentLocation.longitude,
                     }
                   };
-                  print(payload);
+                  addDustbin();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(

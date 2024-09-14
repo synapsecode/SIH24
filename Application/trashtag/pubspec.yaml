@@ -41,7 +41,7 @@ dependencies:
   permission_handler: ^8.1.4+2
   http:
   shared_preferences:
-  carousel_slider: ^4.2.1
+  # carousel_slider: ^4.2.1
   flutter_web_qrcode_scanner: 1.1.1
 
 
