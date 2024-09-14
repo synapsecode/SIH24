@@ -87,7 +87,8 @@ def manufacturer_home(id):
 		return 'Manufacturer Not Found', 404
 	products = m.products
 	product_list = [{'id': p.id, 'name': p.name} for p in products]
-	return jsonify(product_list), 200
+	# return jsonify(product_list), 200
+	return render_template('manufacturer_home.html', products=products)
 
 @ecoperks.route("/manufacturer/register", methods=['GET', 'POST'])
 def manufacturer_register():
@@ -165,7 +166,8 @@ def get_product_batches(mid, pid):
 		return 'Product Not Found'
 	batches = p.batches
 	batch_list = [{'id': b.id, 'size': len(b.entities)} for b in batches]
-	return jsonify(batch_list), 200
+	# return jsonify(batch_list), 200
+	return render_template('manufacturer_batches.html', batches=batches)
 
 
 @ecoperks.route('/manufacturer/create_batch', methods=['POST'])
@@ -220,10 +222,7 @@ def get_batch_qrset(bid):
 		codes.append(f'{b.id}:{e.id}')
 	print(f'Generated Codes => {codes}')
 
-	return jsonify({
-		'success': True,
-		'codes': codes
-	}), 200
+	return render_template('qrset.html', codes=codes)
 
 @ecoperks.route('/manufacturer/<mid>/analytics')
 def get_analytics(mid):
@@ -251,7 +250,7 @@ def get_analytics(mid):
 			'data': blist
 		})
 
-	return jsonify(out), 200
+	return render_template('manufacturer_analytics.html', analytics=out)
 
 # ===================================[ USER ]========================================
 

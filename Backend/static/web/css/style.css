@@ -1,0 +1,330 @@
+/* CSS Reset  */
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+/* Variables */
+:root{
+    --textcolor: black;
+}
+
+/* Navigation */
+#navbar{
+    display: flex;
+    padding: 0px 15px;
+    border: 0;
+    border-radius: 15px;
+    margin: 25px auto;
+    align-items: center;
+    height: auto;
+    background-color: rgba(133, 255, 237, 0.922);
+}
+header{
+    display: flex;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+} 
+#navbar>a>img{
+    height: 40px;
+    padding: 5px 80px 5px 20px;
+    margin: 10px 200px 10px 40px;
+    /* margin-right: 100px; */
+}
+#navbar>div>img{
+    height: 40px;
+    padding: 5px 20px 5px 60px;
+}
+#navul{
+    display: flex;
+    /* margin: auto; */
+    align-items: center;
+}
+#navul li{
+    list-style: none;
+    transition: all 0.35s ease-in-out;
+}
+#navul li a{
+    text-decoration: none;
+    padding: 12px 22px;
+    margin: 2px;
+    border-radius: 15px;
+    color: green;
+    font-weight: bolder;
+    font-size: 1.2rem;
+}
+#navul li a:hover{
+    background-color: rgba(133, 243, 255, 0.888);
+    
+}
+#navul li:hover{
+    transform: scale(1.05);
+}
+#hambitems{
+    font-weight: bolder;
+    list-style: none;
+}
+#hambitems>a{
+    color: green;
+    text-decoration: none;
+}
+#hamb{
+    margin: 10px 40px 10px 200px;
+    display: flex;
+    flex-direction: column;
+}
+#hamburg{
+    display: none;
+    margin-left: 40px;
+    padding: 5px;
+}
+#hambitems{
+    width: max-content;
+    /* padding: 5px 20px 5px 60px; */ 
+    margin: auto;
+    margin-top: 5px;
+    text-align: center;
+}
+#uparrow img{
+    opacity: 0.5;
+    height: 45px;
+}
+#uparrow img:hover{
+    opacity: 0.9;
+    cursor: pointer;
+}
+#uparrow{
+    z-index: 2;
+    position: sticky;
+    top: 690px;
+    margin-left: 10px;
+}
+
+/* Home Section */
+/* #home-section::before{
+    content: " ";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: url("../images/bg.jpg") no-repeat center center/cover;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.58;
+} */
+#home-section{
+    height: 100%;
+}
+#home-section>img{
+    opacity: 0.58;
+    z-index: -2;
+    width: 100%;
+    margin-top: -50px;
+    margin-bottom: -4px;
+}
+#home-section>div{
+    /* z-index: -1; */
+    margin: 15px 25px;
+    padding: 22px 15px;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#homepara{
+    padding: 10px 18px;
+    font-size: larger;
+}
+#logreg{
+    color: rgb(0, 145, 255);
+}
+
+/* About Us */
+#aboutus-section>img{
+    opacity: 0.4;
+    z-index: -2;
+    height: 100%;
+}
+#aboutus-section>div{
+    z-index: -1;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#aboutus-section{
+    position: relative;
+    top:0;
+    height: 740px;
+    display: flex;
+    flex-direction: column;
+}
+#aboutus-section div img{
+    height:50px;
+    margin-bottom: -10px;
+}
+#aboutus-section h1{
+    margin-bottom: 15px;
+}
+#aboutus{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.aboutitem{
+    box-sizing: border-box;
+    color: azure;
+    width: 25%;
+    height: 400px;
+    border: 3px solid;
+    border-radius: 10px;
+    border-color: black;
+    margin: 25px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.aboutitem h2{
+    margin: 10px;    
+}
+
+/* Our Aim */
+
+#ouraim-section{
+    height: 740px;
+    display: flex;
+    flex-direction: column;
+}
+.aimimg img{
+    display: block;
+    width: 46%;
+    margin: 25px;
+}
+#ouraim-section>img{
+    height: 100%;
+    opacity: 0.55;
+    z-index: -2;
+}
+#aimdiv{
+    position: absolute;
+    height: 100%;
+    right: 0;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.aimimg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#ouraim{
+    display: flex;
+    align-items: center;
+    font-size: larger;
+}
+#ouraim .name{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Contact Us */
+#contactus-section{
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+    position: relative;
+    padding-top: 15px;
+}
+#contactus-section::before{
+    content: " ";
+    position: absolute;
+    background: url("https://www.immigration.ca/wp-content/uploads/2020/04/contact_us_279387361-scaled.jpeg") no-repeat center center/cover;
+    width: 100%;
+    height: 400px;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+    opacity: 0.4;
+}
+#contactus{
+    display: flex;
+}
+#contactform{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+#contactform input{
+    width: 300px;
+    margin: 12px;
+    padding: 12px;
+    border-radius: 5px;
+}
+#contactform .btn{
+    width: 150px;
+    margin: auto;
+    margin-top: 15px;
+}
+
+/* Footer */
+footer
+{
+    background-color: rgb(162, 161, 161);
+
+    margin-top: 35px;
+}
+#footer{
+    padding: 7px;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+footer img{
+    margin: 0px 65px;
+    height: 30px;
+}
+    
+/* Utility classes */
+.h-primary{
+    font-size: 2.3rem;
+    font-family: 'Oswald', sans-serif;
+}
+.h-secondary{
+    font-size: 1.8rem;
+    font-family: 'Roboto Mono', monospace;
+}
+.center{
+    text-align: center;
+}
+.btn{
+    background-color: rgba(76, 76, 76, 0.608);
+    border: 2px solid black;
+    font-size: 1.2rem;
+    border-radius: 6px;
+    padding: 3px 8px;
+}
+.btn:hover{
+    background-color: rgba(59, 59, 59, 0.8);
+}
+section>div>div>p{
+    width: 70%;
+    margin: auto;
+    text-align: center;
+}
