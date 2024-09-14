@@ -6,6 +6,7 @@ import 'package:trashtag/auth/login.dart';
 import 'package:trashtag/binocculars/addbindialog.dart';
 import 'package:trashtag/binocculars/binocculars.dart';
 import 'package:trashtag/extensions/miscextensions.dart';
+import 'package:trashtag/leaderboard.dart';
 import 'package:trashtag/services/locationservice.dart';
 import 'package:trashtag/trashtag.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -108,7 +109,7 @@ class _HomeState extends State<Home> {
           BinOcculars(
             key: ValueKey('BINOC'),
           ),
-          SizedBox(),
+          LeaderBoard(),
         ],
       ),
       bottomNavigationBar: GNav(
