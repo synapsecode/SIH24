@@ -325,6 +325,7 @@ def user_scan_qr():
 	
 	#Dispose the Entity
 	ent.disposed = True
+	ent.prev_u = u.id
 
 	#Award some points to user
 	u.points = u.points + 10
