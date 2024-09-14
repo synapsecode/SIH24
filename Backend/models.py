@@ -122,7 +122,7 @@ class ProductEntity(db.Model):
 	batch_id = db.Column(db.Integer, db.ForeignKey('product_batch.id'))
 	disposed = db.Column(db.Boolean, default=False)
 	purchased = db.Column(db.Boolean, default=False)
-	disposed_by = db.Column(db.Integer, nullable=False)
+	disposed_by = db.Column(db.Integer, nullable=False, default=-1)
 
 	def __init__(self, batch):
 		self.batch = batch
