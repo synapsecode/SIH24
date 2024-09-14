@@ -344,8 +344,13 @@ def add_dustbin():
 	lng = location['lng']
 	vid = data['vid'] if 'vid' in data else None
 
+
 	if name is None or type is None or location is None:
 		return "Missing Parameters", 400
+	
+	if type == 'QRBIN':
+		if vid is None:
+			return "Vendor Id required", 400
 	
 	# nearby_dustbins = BinoccularDustbin.query.filter(
 	# 	BinoccularDustbin.type == type,
@@ -364,15 +369,17 @@ def add_dustbin():
 	# 	import math
 	# 	return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-	nearby_bins = BinoccularDustbin.query \
-		.filter(BinoccularDustbin.lat <= lat + thresh)\
-		.filter(BinoccularDustbin.lat >= lat - thresh)\
-		.filter(BinoccularDustbin.lng <= lng + thresh)\
-		.filter(BinoccularDustbin.lng >= lng - thresh)\
-		.all()
+	if type != "QRBIN":
+		nearby_bins = BinoccularDustbin.query \
+			.filter(BinoccularDustbin.type == type) \
+			.filter(BinoccularDustbin.lat <= lat + thresh)\
+			.filter(BinoccularDustbin.lat >= lat - thresh)\
+			.filter(BinoccularDustbin.lng <= lng + thresh)\
+			.filter(BinoccularDustbin.lng >= lng - thresh)\
+			.all()
 
-	if nearby_bins:
-		return "Dustbin already exists in this area", 400
+		if nearby_bins:
+			return "Dustbin already exists in this area", 400
 
 	dustbin = BinoccularDustbin(name=name, type=type,lat=lat,lng=lng,vid=vid)
 
