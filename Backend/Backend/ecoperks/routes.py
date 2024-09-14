@@ -346,6 +346,34 @@ def add_dustbin():
 
 	if name is None or type is None or location is None:
 		return "Missing Parameters", 400
+	
+	# nearby_dustbins = BinoccularDustbin.query.filter(
+	# 	BinoccularDustbin.type == type,
+	# 	func.ST_Distance_Sphere(
+	# 		BinoccularDustbin.location,
+	# 		func.ST_MakePoint(lat,lng)
+	# 	) < 100
+	# ).all()
+
+	lat = float(lat)
+	lng = float(lng)
+	# 1 degree of lat/lng is 111km => 1km = 0.00900901 degrees
+	thresh = (0.05 * 0.00900901)
+
+	# def dist(x1,y1,x2,y2):
+	# 	import math
+	# 	return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+
+	nearby_bins = BinoccularDustbin.query \
+		.filter(BinoccularDustbin.lat <= lat + thresh)\
+		.filter(BinoccularDustbin.lat >= lat - thresh)\
+		.filter(BinoccularDustbin.lng <= lng + thresh)\
+		.filter(BinoccularDustbin.lng >= lng - thresh)\
+		.all()
+
+	if nearby_bins:
+		return "Dustbin already exists in this area", 400
+
 	dustbin = BinoccularDustbin(name=name, type=type,lat=lat,lng=lng,vid=vid)
 
 	db.session.add(dustbin)
