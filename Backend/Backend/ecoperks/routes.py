@@ -97,15 +97,24 @@ def vendor_home(id):
 
 # ===================================[ MANUFACTURER ]========================================
 
-@ecoperks.route('/manufacturer/<id>')
-def manufacturer_home(id):
+
+def manufacturer_home_core(id, api=False):
 	m = TrashTagManufacturer.query.filter_by(id=id).first()
 	if m is None:
 		return 'Manufacturer Not Found', 404
 	products = m.products
 	product_list = [{'id': p.id, 'name': p.name} for p in products]
-	# return jsonify(product_list), 200
+	if(api):
+		return jsonify(product_list), 200
 	return render_template('manufacturer_home.html', products=products)
+
+@ecoperks.route('/manufacturer/<id>')
+def manufacturer_home(id):
+	return manufacturer_home_core(id)
+
+@ecoperks.route('/manufacturer/<id>/api')
+def manufacturer_home_api(id):
+	return manufacturer_home_core(id, api=True)
 
 @ecoperks.route("/manufacturer/register", methods=['GET', 'POST'])
 def manufacturer_register():
@@ -172,9 +181,7 @@ def create_product():
 		'id': p.id
 	}), 200
 
-
-@ecoperks.route('/manufacturer/<mid>/products/<pid>/batches')
-def get_product_batches(mid, pid):
+def get_product_batches_core(mid,pid,api=False):
 	m = TrashTagManufacturer.query.filter_by(id=mid).first()
 	if(m == None):
 		return 'Manufacturer Not Found'
@@ -183,8 +190,17 @@ def get_product_batches(mid, pid):
 		return 'Product Not Found'
 	batches = p.batches
 	batch_list = [{'id': b.id, 'size': len(b.entities)} for b in batches]
-	# return jsonify(batch_list), 200
+	if(api):
+		return jsonify(batch_list), 200
 	return render_template('manufacturer_batches.html', batches=batches)
+
+@ecoperks.route('/manufacturer/<mid>/products/<pid>/batches')
+def get_product_batches(mid, pid):
+	return get_product_batches_core(mid,pid)
+
+@ecoperks.route('/manufacturer/<mid>/products/<pid>/batches/api')
+def get_product_batche_api(mid, pid):
+	return get_product_batches_core(mid,pid,api=True)
 
 
 @ecoperks.route('/manufacturer/create_batch', methods=['POST'])
@@ -241,14 +257,12 @@ def get_batch_qrset(bid):
 
 	return render_template('qrset.html', codes=codes)
 
-@ecoperks.route('/manufacturer/<mid>/analytics')
-def get_analytics(mid):
+
+def get_analytics_core(mid, api=False):
 	m = TrashTagManufacturer.query.filter_by(id=mid).first()
 	if(m == None):
 		return 'Manufacturer does not Exist', 400
-	
 	out = []
-
 	for product in m.products:
 		blist = []
 		for batch in product.batches:
@@ -267,7 +281,18 @@ def get_analytics(mid):
 			'data': blist
 		})
 
+	if(api):
+		return jsonify(out), 200
 	return render_template('manufacturer_analytics.html', analytics=out)
+
+
+@ecoperks.route('/manufacturer/<mid>/analytics/api')
+def get_analytics_api(mid):
+	return get_analytics_core(mid,api=True)
+
+@ecoperks.route('/manufacturer/<mid>/analytics')
+def get_analytics(mid):
+	return get_analytics_core(mid,api=False)
 
 # ===================================[ USER ]========================================
 
