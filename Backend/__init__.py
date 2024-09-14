@@ -37,6 +37,8 @@ def create_database():
 	print("Creating App & Database")
 	app = create_app()
 	with app.app_context():
+		db.drop_all()
+		db.session.commit()
 		db.create_all()
 		db.session.commit()
 	print("Successfully Created Database")

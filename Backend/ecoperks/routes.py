@@ -12,8 +12,10 @@ def ecoperks_home():
 
 
 # =============================== [ VENDOR ] =============================
-@ecoperks.route("/vendor/register", methods=['POST'])
+@ecoperks.route("/vendor/register", methods=['GET','POST'])
 def vendor_register():
+	if(request.method == 'GET'):
+		return render_template('vendor_register.html')
 	data = request.json
 	uname = data['username']
 	name = data['name']
@@ -30,8 +32,10 @@ def vendor_register():
 	db.session.commit()
 	return 'Registered!'
 
-@ecoperks.route('/vendor/login', methods=['POST'])
+@ecoperks.route('/vendor/login', methods=['GET','POST'])
 def vendor_login():
+	if(request.method == 'GET'):
+		return render_template('vendor_login.html')
 	data = request.json
 	if(data == None or data == ''):
 		return 'Invalid Request Body', 400
@@ -46,36 +50,49 @@ def vendor_login():
 		'id': v.id
 	})
 
+@ecoperks.route('/vendor/<id>')
+def vendor_home(id):
+	v = TrashTagVendor.query.filter_by(id=id).first()
+	vname = v.name
+	if v is None:
+		return 'Vendor Not Found', 404
+	bins = BinoccularDustbin.query.filter_by(vendor_id=id).all()
+	qrbins = [b.toJson() for b in bins]
+	bincount = len(qrbins)
+	print(bincount)
+	# return jsonify(product_list), 200
+	return render_template('vendor_home.html', qrbins=qrbins, bincount=bincount, vname=vname,vid=id)
 
-@ecoperks.route("/vendor/scan", methods=['POST'])
-def vendor_scan_qr():
-	data = request.json
-	qrcode = data['qrcode']
-	vid = data['vid']
-	if(qrcode == None or vid == None):
-		return "Invalid Payload", 400
-	v = TrashTagVendor.query.filter_by(id=vid).first()
-	if(v == None):
-		return "Invalid Vendor", 400
-	bid, eid = qrcode.split(':') #batchid:entityid
-	bat = ProductBatch.query.filter_by(id=bid).first()
-	if(bat == None):
-		return "Invalid Batch", 400
-	ent = ProductEntity.query.filter_by(id=eid, batch=bat).first()
-	if(ent == None):
-		return "Invalid Entity", 400
-	if(ent.purchased):
-		return "Already Scanned", 400
+
+# @ecoperks.route("/vendor/scan", methods=['POST'])
+# def vendor_scan_qr():
+# 	data = request.json
+# 	qrcode = data['qrcode']
+# 	vid = data['vid']
+# 	if(qrcode == None or vid == None):
+# 		return "Invalid Payload", 400
+# 	v = TrashTagVendor.query.filter_by(id=vid).first()
+# 	if(v == None):
+# 		return "Invalid Vendor", 400
+# 	bid, eid = qrcode.split(':') #batchid:entityid
+# 	bat = ProductBatch.query.filter_by(id=bid).first()
+# 	if(bat == None):
+# 		return "Invalid Batch", 400
+# 	ent = ProductEntity.query.filter_by(id=eid, batch=bat).first()
+# 	if(ent == None):
+# 		return "Invalid Entity", 400
+# 	if(ent.purchased):
+# 		return "Already Scanned", 400
 	
-	#Purchase the Entity
-	ent.purchased = True
+# 	#Purchase the Entity
+# 	ent.purchased = True
 
-	#Award some points to vendor
-	v.points = v.points + 5
+# 	#Award some points to vendor
+# 	v.points = v.points + 5
 
-	db.session.commit()
+# 	db.session.commit()
 
-	return "Purchased", 200
+# 	return "Purchased", 200
 
 
 # ===================================[ MANUFACTURER ]========================================
@@ -274,10 +291,12 @@ def user_scan_qr():
 	if(ent.disposed):
 		p_uid = ent.disposed_by
 		prev_u = User.query.filter_by(id=p_uid).first()
+		if(prev_u == None): 
+			return "Already Disposed", 200
 		prev_u.points = prev_u.points - 10
 		u.points = u.points + 10
 		db.session.commit()
-		return "Disposed", 200
+		return "Re-Disposed", 200
 	
 	#Dispose the Entity
 	ent.disposed = True
@@ -297,9 +316,12 @@ def add_dustbin():
 	location = data['location']
 	lat = location['lat']
 	lng = location['lng']
+	vid = data['vid'] if 'vid' in data else None
+
 	if name is None or type is None or location is None:
 		return "Missing Parameters", 400
-	dustbin = BinoccularDustbin(name=name, type=type,lat=lat,lng=lng)
+	dustbin = BinoccularDustbin(name=name, type=type,lat=lat,lng=lng,vid=vid)
+
 	db.session.add(dustbin)
 	db.session.commit()
 	return "Dustbin Added", 200
