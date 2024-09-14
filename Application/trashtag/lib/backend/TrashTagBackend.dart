@@ -137,4 +137,27 @@ class TrashTagBackend {
     }
     return ResponseType(result: dustbins, message: 'success');
   }
+
+  Future<ResponseType<List<Dustbin>?>> getNearestBins({
+    required double lat,
+    required double lng,
+    required double radius,
+  }) async {
+    List<Dustbin> dustbins = [];
+    final uri = Uri.parse("$url/binocculars/get_proximal/$lat/$lng/$radius");
+    final res = await http.get(uri);
+    if (res.statusCode == 200) {
+      final resdata = jsonDecode(res.body);
+      for (final x in resdata) {
+        final d = Dustbin.fromJson(x);
+        dustbins.add(d);
+      }
+    } else {
+      return ResponseType(
+        result: null,
+        message: 'Server Side Error (${res.statusCode})',
+      );
+    }
+    return ResponseType(result: dustbins, message: 'success');
+  }
 }
