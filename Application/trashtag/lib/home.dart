@@ -25,32 +25,17 @@ class _HomeState extends State<Home> {
   final Map<int, String> appBarTitles = {
     0: 'TrashTag',
     1: 'BinOcculars',
+    2: 'Leaderboard'
   };
 
   final Map<int, Widget> pageLogos = {
     0: Image.asset('assets/TrashTagLogo.png'),
     1: Image.asset('assets/BinOccularsLogo.png'),
+    2: Image.asset('assets/BinOccularsLogo.png'),
   };
 
   String appBar = 'TrashTag';
   Widget appBarLogo = Image.asset('assets/TrashTagLogo.png');
-
-  final screens = [
-    const TrashTagFragment(key: ValueKey('TT')),
-    const BinOcculars(
-      key: ValueKey('BINOC'),
-    )
-  ];
-
-  getContent() {
-    if (pageIndex == 0) {
-      return screens[0];
-    } else if (pageIndex == 1) {
-      return screens[1];
-    }
-    return const SizedBox();
-  }
-
   TextEditingController serverLinkController = TextEditingController();
 
   Widget getFAB() {
@@ -116,7 +101,16 @@ class _HomeState extends State<Home> {
         ],
         backgroundColor: Colors.green,
       ),
-      body: getContent(),
+      body: IndexedStack(
+        index: pageIndex,
+        children: const [
+          TrashTagFragment(key: ValueKey('TT')),
+          BinOcculars(
+            key: ValueKey('BINOC'),
+          ),
+          SizedBox(),
+        ],
+      ),
       bottomNavigationBar: GNav(
         selectedIndex: pageIndex,
         backgroundColor: Colors.green,
