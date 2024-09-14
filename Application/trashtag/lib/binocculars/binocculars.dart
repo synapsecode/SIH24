@@ -7,6 +7,7 @@ import 'package:toast/toast.dart';
 import 'package:trashtag/binocculars/dustbindetails.dart';
 import 'package:trashtag/binocculars/dustbinfilter.dart';
 import 'package:location/location.dart' as loc;
+import 'package:trashtag/extensions/miscextensions.dart';
 import 'package:trashtag/services/locationservice.dart';
 import 'package:trashtag/services/waypointservice.dart';
 import 'package:trashtag/models/dustbin.dart';
@@ -238,6 +239,14 @@ class _BinOccularsState extends State<BinOcculars> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
+                            FloatingActionButton(
+                              backgroundColor: Colors.black,
+                              foregroundColor: Colors.white,
+                              onPressed: () async {
+                                getDusbins();
+                              },
+                              child: const Icon(Icons.refresh),
+                            ).addRightMargin(5),
                             DustbinDistanceFilterWidget(
                               radiusController: radiusController,
                               onRadiusSelected: (r) async {
