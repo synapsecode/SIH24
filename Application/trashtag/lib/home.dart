@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
 import 'package:trashtag/binocculars/addbindialog.dart';
 import 'package:trashtag/binocculars/binocculars.dart';
 import 'package:trashtag/extensions/miscextensions.dart';
