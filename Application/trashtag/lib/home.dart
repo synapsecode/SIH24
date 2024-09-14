@@ -34,15 +34,18 @@ class _HomeState extends State<Home> {
   String appBar = 'TrashTag';
   Widget appBarLogo = Image.asset('assets/TrashTagLogo.png');
 
+  final screens = [
+    const TrashTagFragment(key: ValueKey('TT')),
+    const BinOcculars(
+      key: ValueKey('BINOC'),
+    )
+  ];
+
   getContent() {
     if (pageIndex == 0) {
-      return TrashTagFragment(
-        key: ValueKey('TT'),
-      );
+      return screens[0];
     } else if (pageIndex == 1) {
-      return const BinOcculars(
-        key: ValueKey('BINOC'),
-      );
+      return screens[1];
     }
     return const SizedBox();
   }
