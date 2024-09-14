@@ -19,8 +19,11 @@ class _TrashTagApplicationState extends State<TrashTagApplication> {
   String? _user;
   _checkUser() async {
     final prefs = await SharedPreferences.getInstance();
-    _user = prefs.getString('x-user');
-    setState(() {});
+
+    setState(() {
+      _user = prefs.getString('x-user');
+    });
+
   }
 
   @override

@@ -70,4 +70,46 @@ class TrashTagBackend {
     print('ERROR => ${res.body}');
     return ResponseType(result: false, message: res.body);
   }
+
+  Future<ResponseType<int?>> getUserID({required String username}) async {
+    final res =
+        await http.get(Uri.parse('$url/user/get_id_by_username/$username'));
+
+    if (res.statusCode == 200) {
+      final resbody = jsonDecode(res.body);
+      final id = int.parse(resbody['id'].toString());
+      return ResponseType(result: id, message: 'success');
+    }
+    return ResponseType(result: null, message: res.body);
+  }
+
+  Future<ResponseType<double?>> getUserPoints({required int userID}) async {
+    final res = await http.get(Uri.parse('$url/user/get_user_points/$userID'));
+    if (res.statusCode == 200) {
+      final resbody = jsonDecode(res.body);
+      final id = double.parse(resbody['points'].toString());
+      return ResponseType(result: id, message: 'success');
+    }
+    return ResponseType(result: null, message: res.body);
+  }
+
+  Future<ResponseType<bool>> add2dustbin({
+    required int userId,
+    required String qrCodeValue,
+  }) async {
+    final res = await http.post(
+      Uri.parse('$url/trashtag/userscan'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+        {'uid': userId, 'qrcode': qrCodeValue},
+      ),
+    );
+    if (res.statusCode == 200) {
+      return ResponseType(result: true, message: res.body);
+    }
+    print('ERROR => ${res.body}');
+    return ResponseType(result: false, message: res.body);
+  }
 }
