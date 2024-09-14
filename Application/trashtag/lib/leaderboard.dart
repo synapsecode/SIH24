@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:trashtag/backend/TrashTagBackend.dart';
 import 'package:trashtag/models/user.dart';
@@ -15,6 +16,8 @@ class LeaderBoard extends StatefulWidget {
 class _LeaderBoardState extends State<LeaderBoard> {
   List<User>? users;
   Timer? _timer;
+  User? currentUser;
+  int? rank;
 
   final tileColor = {
     0: Color.fromARGB(255, 6, 63, 41),
@@ -34,11 +37,17 @@ class _LeaderBoardState extends State<LeaderBoard> {
 
   loadLeaderboard() async {
     print('fetching...');
+
     final r = await TrashTagBackend().getLeaderboard();
+
     if (r.result != null) {
+      final prefs = await SharedPreferences.getInstance();
+      final uname = prefs.getString('x-user');
       // print(r);
       setState(() {
         users = r.result;
+        currentUser = users!.firstWhere((element) => element.username == uname);
+        rank = users!.indexOf(currentUser!) + 1;
       });
     } else {
       ToastContext().init(context);
@@ -75,17 +84,22 @@ class _LeaderBoardState extends State<LeaderBoard> {
         child: Column(
           children: [
             SizedBox(
-              height: 25,
+              height: 20,
             ),
             Text(
               'Leaderboard 🏆',
               style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic),
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                // fontStyle: FontStyle.italic
+              ),
+            ),
+            Text(
+              'My rank: #$rank (${currentUser?.points})',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(
-              height: 25,
+              height: 20,
             ),
             users == null
                 ? Text('No users')
@@ -118,6 +132,8 @@ class _LeaderBoardState extends State<LeaderBoard> {
           ],
         ),
       ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //     onPressed: () {}, label: Text('My rank: #$rank')),
     );
   }
 }
