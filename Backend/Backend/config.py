@@ -10,7 +10,7 @@ class Config:
 	# SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite') #Database path
 	SQLALCHEMY_DATABASE_URI = DBURI
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
-	PRODUCTION_MODE = False #This states whether the app runs in DEBUG MODE or not
+	PRODUCTION_MODE = True #This states whether the app runs in DEBUG MODE or not
 	PORT_NUMBER = 8080
 	HOST_NAME = 'localhost'
 	UPLOAD_FOLDER = 'static'
