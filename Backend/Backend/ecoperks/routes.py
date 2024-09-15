@@ -308,20 +308,42 @@ def get_analytics(mid):
 @ecoperks.route("/userscan", methods=['POST'])
 def user_scan_qr():
 	data = request.json
-	qrcode = data['qrcode']
+	productcode = data['productcode'] if 'productcode' in data else None
+	dustbincode = data['dustbincode'] if 'dustbincode' in data else None
 	uid = data['uid']
-	if(qrcode == None or uid == None):
+	if(None in [productcode, dustbincode, uid]):
 		return "Invalid Payload", 400
+
+	# Check for User Validity
 	u = User.query.filter_by(id=uid).first()
 	if(u == None):
 		return "Invalid User", 400
-	bid, eid = qrcode.split(':') #batchid:entityid
+
+	#Check for Product Validity
+	bid, eid = productcode.split(':') #batchid:entityid
 	bat = ProductBatch.query.filter_by(id=bid).first()
-	if(bat == None):
-		return "Invalid Batch", 400
+	if(bat == None): return "Invalid Batch", 400
 	ent = ProductEntity.query.filter_by(id=eid, batch=bat).first()
-	if(ent == None):
-		return "Invalid Entity", 400
+	if(ent == None): return "Invalid Entity", 400
+
+	#Check for Dustbin Validity
+	binid, vid, blat, blng = dustbincode.split(':')
+	if(None in [binid, vid, blat, blng]):
+		return "Invalid Dustbin QR", 400
+	
+	dustbin = BinoccularDustbin.query.filter_by(id=binid).first()
+	if(dbin == None):
+		return "QRBIN does not exist!", 400
+	vid = dbin.vendor_id
+	if(vid != None):
+		vndr = TrashTagVendor.query.filter_by(id=vid).first()
+		if(vndr):
+			vndr.points += 0.5 #Add  Points for each disposal
+		else:
+			print('Vendor Does not Exist! Skipping')
+	else:
+		print('QRBIN does not have a VendorID; Skipping')
+
 	if(ent.disposed):
 		p_uid = ent.disposed_by
 		prev_u = User.query.filter_by(id=p_uid).first()
@@ -340,7 +362,6 @@ def user_scan_qr():
 	u.points = u.points + 10
 
 	db.session.commit()
-
 	return "Disposed", 200
 
 @ecoperks.route("/add_dustbin", methods=['POST'])

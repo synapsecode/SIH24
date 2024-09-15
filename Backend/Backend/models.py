@@ -56,7 +56,7 @@ class BinoccularDustbin(db.Model):
 			'lat': self.lat,
 			'lng': self.lng,
 			'vid': self.vendor_id,
-			'qrcode': f"{self.vendor_id}:{self.id}"
+			'qrcode': f"{self.id}:{self.vendor_id}:{self.lat}:{self.lng}"
 		}
 
 # ============================ (TrashTag) ================================
