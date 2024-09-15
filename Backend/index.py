@@ -11,4 +11,4 @@ socket.setdefaulttimeout(120)
 app = create_app()
 config = Config()
 if __name__ == '__main__':
-	app.run(debug=True, host=config.HOST_NAME, port=config.PORT_NUMBER)
+	app.run(debug=config.PRODUCTION_MODE, host=config.HOST_NAME, port=config.PORT_NUMBER)
