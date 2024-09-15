@@ -151,11 +151,13 @@ def manufacturer_login():
 	if(m == None):
 		return jsonify({
 			'success': False,
-			'message': 'Manufacturer Not Found'
+			'message': 'Manufacturer Not Found',
+			'name': None
 		}), 404
 	return jsonify({
 		'success': True,
-		'id': m.id
+		'id': m.id,
+		'name': m.name
 	}), 200
 
 @ecoperks.route('/manufacturer/create_product', methods=['POST'])
