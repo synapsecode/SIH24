@@ -37,14 +37,25 @@ class TrashTagBackend {
   Future<ResponseType<bool>> register(
       {required String name,
       required String username,
-      required String password}) async {
+      required String password,
+      required String referrer}) async {
+    print(jsonEncode({
+      'name': name,
+      'username': username,
+      'password': password,
+      "referrer": referrer.isNotEmpty ? referrer : null
+    }));
     final res = await http.post(
       Uri.parse("$url/user/register"),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: jsonEncode(
-          {'name': name, 'username': username, 'password': password}),
+      body: jsonEncode({
+        'name': name,
+        'username': username,
+        'password': password,
+        "referrer": referrer.isNotEmpty ? referrer : null
+      }),
     );
     if (res.statusCode == 200) {
       return ResponseType(result: true, message: 'success');

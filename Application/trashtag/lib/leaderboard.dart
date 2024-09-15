@@ -82,55 +82,62 @@ class _LeaderBoardState extends State<LeaderBoard> {
       backgroundColor: Color.fromARGB(255, 158, 222, 233),
 
       body: Center(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Leaderboard 🏆',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                // fontStyle: FontStyle.italic
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
               ),
-            ),
-            Text(
-              'My rank: #$rank (${currentUser?.points})',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            users == null
-                ? Text('No users')
-                : ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: users!.length,
-                    itemBuilder: (BuildContext ctx, int index) {
-                      return Card(
-                        color: getColor(index),
-                        child: ListTile(
-                          leading: Text(
-                            '#${index + 1}',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
+              Text(
+                'Leaderboard 🏆',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  // fontStyle: FontStyle.italic
+                ),
+              ),
+              Text(
+                'My rank: #$rank (${currentUser?.points})',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              users == null
+                  ? Text('No users')
+                  : ListView.builder(
+                      physics:
+                          ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                      shrinkWrap: true,
+                      itemCount: users!.length,
+                      itemBuilder: (BuildContext ctx, int index) {
+                        return Card(
+                          color: getColor(index),
+                          child: ListTile(
+                            leading: Text(
+                              '#${index + 1}',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                            title: Text(
+                              users![index].username,
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              'Points: ${users![index].points}',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                            trailing: (index == 0 || index == 1 || index == 2)
+                                ? Image.asset(trophy[index]!)
+                                : SizedBox.shrink(),
                           ),
-                          title: Text(
-                            users![index].username,
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            'Points: ${users![index].points}',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                          trailing: (index == 0 || index == 1 || index == 2)
-                              ? Image.asset(trophy[index]!)
-                              : SizedBox.shrink(),
-                        ),
-                      );
-                    },
-                  ),
-          ],
+                        );
+                      },
+                    ),
+            ],
+          ),
         ),
       ),
       // floatingActionButton: FloatingActionButton.extended(

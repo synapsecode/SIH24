@@ -35,8 +35,17 @@ def user_register():
 	u = User.query.filter_by(username=data['username']).first()
 	if(u != None):
 		return 'User Already Exists', 400
-
+	
 	u = User(data['name'], data['username'], data['password'])
+	
+	rf = data['referrer'] if 'referrer' in data else None
+	
+	if rf != None or rf != '':
+		ref = User.query.filter_by(username=rf).first()
+		if ref != None:
+			ref.points = ref.points + 7.0
+			u.points = 3.0	
+	
 	db.session.add(u)
 	db.session.commit()
 	return "User Registered!", 200
