@@ -20,7 +20,7 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
   String? garbageKey;
   int? userID;
   double? userPoints;
-  String mode = 'Product';
+  String mode = 'Dustbin';
 
   final _trBackend = TrashTagBackend();
 
@@ -87,27 +87,32 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
   }
 
   onScanButtonPressed() async {
-    if (mode == 'Product') {
+    if (mode == 'Dustbin') {
+      final gKey = await scanQR();
+      if (gKey == null) return;
+      if (':'.allMatches(gKey).length != 3) {
+        ToastContext().init(context);
+        Toast.show('Scan dustbin first');
+        return;
+      }
+      print("GarbageKey: $gKey");
+      setState(() {
+        garbageKey = gKey;
+        mode = 'Product';
+      });
+    } else if (mode == 'Product') {
       //Scan the product
       final pKey = await scanQR();
       if (pKey == null) return;
       print("ProductKey: $pKey");
       setState(() {
         productKey = pKey;
-        mode = 'Dustbin';
-      });
-    } else if (mode == 'Dustbin') {
-      final gKey = await scanQR();
-      if (gKey == null) return;
-      print("GarbageKey: $gKey");
-      setState(() {
-        garbageKey = gKey;
         mode = 'loading';
       });
       await add2dustbin();
       await initialize();
       setState(() {
-        mode = 'Product';
+        mode = 'Dustbin';
       });
     }
   }
@@ -140,9 +145,7 @@ class _TrashTagFragmentState extends State<TrashTagFragment> {
     print("ProductKey: $productKey");
     print("GarbageKey: $garbageKey");
     final res = await _trBackend.add2dustbin(
-      userId: userID!,
-      qrCodeValue: productKey!,
-    );
+        userId: userID!, productqr: productKey!, binqr: garbageKey!);
     Toast.show(res.message);
   }
 
