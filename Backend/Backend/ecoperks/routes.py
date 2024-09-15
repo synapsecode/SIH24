@@ -374,8 +374,31 @@ def add_dustbin():
 	lng = location['lng']
 	vid = data['vid'] if 'vid' in data else None
 
+
 	if name is None or type is None or location is None:
 		return "Missing Parameters", 400
+	
+	if type == 'QRBIN':
+		if vid is None:
+			return "Vendor Id required", 400
+	
+	lat = float(lat)
+	lng = float(lng)
+	# 1 degree of lat/lng is 111km => 1km = 0.00900901 degrees
+	thresh = (0.05 * 0.00900901)
+
+	if type != "QRBIN":
+		nearby_bins = BinoccularDustbin.query \
+			.filter(BinoccularDustbin.type == type) \
+			.filter(BinoccularDustbin.lat <= lat + thresh)\
+			.filter(BinoccularDustbin.lat >= lat - thresh)\
+			.filter(BinoccularDustbin.lng <= lng + thresh)\
+			.filter(BinoccularDustbin.lng >= lng - thresh)\
+			.all()
+
+		if nearby_bins:
+			return "Dustbin already exists in this area", 400
+
 	dustbin = BinoccularDustbin(name=name, type=type,lat=lat,lng=lng,vid=vid)
 
 	db.session.add(dustbin)
