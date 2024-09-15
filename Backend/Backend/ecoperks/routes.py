@@ -434,3 +434,7 @@ def bulk_add_dustbin():
 	db.session.add_all(bins)
 	db.session.commit()
 	return "Bulk Import Completed!", 200
+
+# @ecoperks.route("/reqqr", methods = ["POST"])
+# def reqqr():
+# 	data = request.json

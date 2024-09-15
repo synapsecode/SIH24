@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trashtag/services/waypointservice.dart';
@@ -7,7 +8,7 @@ import 'package:trashtag/models/dustbin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DustbinDetails extends StatelessWidget {
-  const DustbinDetails({
+  DustbinDetails({
     super.key,
     required this.dustbin,
     required this.userPosition,
@@ -16,6 +17,15 @@ class DustbinDetails extends StatelessWidget {
   final Dustbin dustbin;
   final LatLng userPosition;
   final Function(Dustbin)? onNavigateClicked;
+
+  final Uri _url = Uri.parse(
+      'https://ce7e-2401-4900-900d-af0c-b519-93f1-4c53-ff7f.ngrok-free.app/ecoperks/vendor/login');
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +75,19 @@ class DustbinDetails extends StatelessWidget {
               icon: const Icon(Icons.navigation),
               label: const Text('Navigate in-App'),
             ).limitSize(300),
+            SizedBox(
+              height: 15,
+            ),
+            Visibility(
+              visible: dustbin.type != 'QRBIN',
+              child: ElevatedButton.icon(
+                onPressed: _launchUrl,
+                icon: Icon(Icons.qr_code_2_outlined),
+                label: Text("Request QR"),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(Colors.black)),
+              ),
+            )
           ],
         ),
       ),
