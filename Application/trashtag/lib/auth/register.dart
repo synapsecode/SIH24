@@ -18,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _nc = TextEditingController();
   final _uc = TextEditingController();
   final _pc = TextEditingController();
+  final _rc = TextEditingController();
   final _trBackend = TrashTagBackend();
   bool showPassword = false;
   @override
@@ -25,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _nc.dispose();
     _uc.dispose();
     _pc.dispose();
+    _rc.dispose();
     super.dispose();
   }
 
@@ -39,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.black)),
           width: 300,
-          height: 310,
+          height: 380,
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -70,6 +72,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
+              TextField(
+                controller: _rc,
+                decoration: const InputDecoration(hintText: "Referrer"),
+              ),
+              Text(
+                '*You will get 3.0 points on using referral code',
+                style: TextStyle(fontSize: 12),
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -79,10 +89,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ToastContext().init(context);
                   Toast.show('Registering!');
                   final res = await _trBackend.register(
-                    username: _uc.value.text,
-                    name: _nc.value.text,
-                    password: _pc.value.text,
-                  );
+                      username: _uc.value.text,
+                      name: _nc.value.text,
+                      password: _pc.value.text,
+                      referrer: _rc.text);
                   if (res.result == true) {
                     print('Register Successful!');
                     final prefs = await SharedPreferences.getInstance();
