@@ -332,9 +332,9 @@ def user_scan_qr():
 		return "Invalid Dustbin QR", 400
 	
 	dustbin = BinoccularDustbin.query.filter_by(id=binid).first()
-	if(dbin == None):
+	if(dustbin == None):
 		return "QRBIN does not exist!", 400
-	vid = dbin.vendor_id
+	vid = dustbin.vendor_id
 	if(vid != None):
 		vndr = TrashTagVendor.query.filter_by(id=vid).first()
 		if(vndr):
