@@ -80,6 +80,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 158, 222, 233),
+
       body: Center(
         child: Column(
           children: [
