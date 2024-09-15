@@ -18,11 +18,16 @@
             grid-template-columns: repeat(4, [col-start] 1fr);
             grid-gap: 80px;
         }
+
+        span {
+            color: green;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
     </style>
 </head>
 
 <body>
-    <h1>Vendor Home</h1>
+    <h1>Vendor Home <span>({{vpoints or 0}} points)</span></h1>
 
     <button onclick="createQRBIN()">Create QRBIN</button>
     <br><br><br><br>

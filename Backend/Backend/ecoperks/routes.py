@@ -60,8 +60,9 @@ def vendor_home(id):
 	qrbins = [b.toJson() for b in bins]
 	bincount = len(qrbins)
 	print(bincount)
+	vpoints=v.points
 	# return jsonify(product_list), 200
-	return render_template('vendor_home.html', qrbins=qrbins, bincount=bincount, vname=vname,vid=id)
+	return render_template('vendor_home.html', qrbins=qrbins, bincount=bincount, vname=vname,vid=id, vpoints=vpoints)
 
 
 # @ecoperks.route("/vendor/scan", methods=['POST'])
@@ -410,3 +411,24 @@ def get_leaderboard():
 	u = User.query.order_by(User.points.desc())
 	leaderboard = [user.toJson() for user in u]
 	return jsonify(leaderboard), 200
+
+
+@ecoperks.route("/bulk_add_dustbin", methods=['POST'])
+def bulk_add_dustbin():
+	data = request.json
+	data = data['data']
+	bins = []
+	for x in data:
+		parts = x.split(' ')
+		name = parts[2]
+		typ = parts[3]
+		lat = parts[0]
+		lng = parts[1]
+		vid = 3
+		if(None in [name,typ,lat,lng,vid]):
+			continue
+		dustbin = BinoccularDustbin(name=name, type=typ,lat=lat,lng=lng,vid=vid)
+		bins.append(dustbin)
+	db.session.add_all(bins)
+	db.session.commit()
+	return "Bulk Import Completed!", 200
